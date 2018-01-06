@@ -65,7 +65,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="QUICK BREW"
+                        android:text="@string/quick_brew_label"
                         android:layout_gravity="center"
                         android:textColor="@android:color/white"
                         android:textSize="20sp"
@@ -87,7 +87,7 @@
                         android:layout_weight="50"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:text="HOT"/>
+                        android:text="@string/quick_brew_hot_label"/>
 
                     <TextView
                         android:id="@+id/text_view_quick_cold"
@@ -96,42 +96,11 @@
                         android:layout_weight="50"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:text="COLD"/>
+                        android:text="@string/quick_brew_cold_label"/>
 
                 </LinearLayout>
 
             </RelativeLayout>
-
-            <!--<RelativeLayout-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_marginBottom="2dp"-->
-                <!--android:layout_marginStart="2dp"-->
-                <!--android:background="@color/light_blue"-->
-                <!--app:layout_columnWeight="50"-->
-                <!--app:layout_rowWeight="50"-->
-                <!--app:layout_row="0"-->
-                <!--app:layout_column="1">-->
-
-                <!--<ImageView-->
-                    <!--android:id="@+id/img_view_auto_brew"-->
-                    <!--android:layout_width="50dp"-->
-                    <!--android:layout_height="50dp"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:src="@drawable/ic_flash_auto_black_24dp"-->
-                    <!--android:tint="@color/teal"/>-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_below="@id/img_view_auto_brew"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:text="AUTO BREW"-->
-                    <!--android:textColor="@android:color/white"-->
-                    <!--android:textSize="20sp"-->
-                    <!--android:textStyle="bold"/>-->
-
-            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_height="0dp"
@@ -156,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/img_view_my_brews"
                     android:layout_centerHorizontal="true"
-                    android:text="MY BREWS"
+                    android:text="@string/my_brews_label"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
@@ -187,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/img_view_recent_brews"
                     android:layout_centerHorizontal="true"
-                    android:text="RECENT BREWS"
+                    android:text="@string/recent_brews_label"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"/>

@@ -8,6 +8,11 @@
     <string name="text_view_label_water">WATER (g)</string>
     <string name="ratio_label">RATIO</string>
     <string name="reset_timer">BREW</string>
+    <string name="quick_brew_hot_label">HOT</string>
+    <string name="quick_brew_cold_label">COLD</string>
+    <string name="recent_brews_label">RECENT BREWS</string>
+    <string name="my_brews_label">MY BREWS</string>
+    <string name="quick_brew_label">QUICK BREW</string>
 
     <string-array name="spinner_array">
         <item>HOT</item>
