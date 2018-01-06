@@ -24,7 +24,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="45">
+        android:layout_weight="45"
+        android:orientation="vertical">
 
         <android.support.v7.widget.GridLayout
             android:layout_width="match_parent"
@@ -33,12 +34,15 @@
             app:rowCount="2">
 
             <RelativeLayout
+                android:layout_height="0dp"
                 android:layout_width="0dp"
                 android:layout_marginBottom="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
-                app:layout_rowWeight="50">
+                app:layout_rowWeight="50"
+                app:layout_row="0"
+                app:layout_column="0">
 
                 <ImageView
                     android:id="@+id/img_view_quick_brew"
@@ -61,12 +65,15 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_height="0dp"
                 android:layout_width="0dp"
                 android:layout_marginBottom="2dp"
                 android:layout_marginStart="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
-                app:layout_rowWeight="50">
+                app:layout_rowWeight="50"
+                app:layout_row="0"
+                app:layout_column="1">
 
                 <ImageView
                     android:id="@+id/img_view_auto_brew"
@@ -89,12 +96,14 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_height="0dp"
                 android:layout_width="0dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginTop="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
-                app:layout_rowWeight="50">
+                app:layout_rowWeight="50"
+>
 
                 <ImageView
                     android:id="@+id/img_view_my_brews"
@@ -117,12 +126,15 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_height="0dp"
                 android:layout_width="0dp"
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
-                app:layout_rowWeight="50">
+                app:layout_rowWeight="50"
+                app:layout_row="1"
+                app:layout_column="1">
 
                 <ImageView
                     android:id="@+id/img_view_recent_brews"
