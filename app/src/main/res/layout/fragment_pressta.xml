@@ -34,66 +34,74 @@
             app:rowCount="2">
 
             <RelativeLayout
+                android:id="@+id/rel_layout_quick_brew"
                 android:layout_height="0dp"
                 android:layout_width="0dp"
                 android:layout_marginBottom="2dp"
-                android:layout_marginEnd="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
                 app:layout_rowWeight="50"
                 app:layout_row="0"
-                app:layout_column="0">
+                app:layout_column="0"
+                app:layout_columnSpan="2">
 
-                <ImageView
-                    android:id="@+id/img_view_quick_brew"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_flash_on_black_24dp"
-                    android:tint="@color/teal"/>
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/img_view_quick_brew"
-                    android:layout_centerHorizontal="true"
-                    android:text="QUICK BREW"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/img_view_quick_brew"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_flash_on_black_24dp"
+                        android:tint="@color/teal"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QUICK BREW"
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_height="0dp"
-                android:layout_width="0dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginStart="2dp"
-                android:background="@color/light_blue"
-                app:layout_columnWeight="50"
-                app:layout_rowWeight="50"
-                app:layout_row="0"
-                app:layout_column="1">
+            <!--<RelativeLayout-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_marginBottom="2dp"-->
+                <!--android:layout_marginStart="2dp"-->
+                <!--android:background="@color/light_blue"-->
+                <!--app:layout_columnWeight="50"-->
+                <!--app:layout_rowWeight="50"-->
+                <!--app:layout_row="0"-->
+                <!--app:layout_column="1">-->
 
-                <ImageView
-                    android:id="@+id/img_view_auto_brew"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_flash_auto_black_24dp"
-                    android:tint="@color/teal"/>
+                <!--<ImageView-->
+                    <!--android:id="@+id/img_view_auto_brew"-->
+                    <!--android:layout_width="50dp"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:src="@drawable/ic_flash_auto_black_24dp"-->
+                    <!--android:tint="@color/teal"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/img_view_auto_brew"
-                    android:layout_centerHorizontal="true"
-                    android:text="AUTO BREW"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@id/img_view_auto_brew"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:text="AUTO BREW"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textStyle="bold"/>-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_height="0dp"

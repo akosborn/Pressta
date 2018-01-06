@@ -8,4 +8,9 @@
     <string name="text_view_label_water">WATER (g)</string>
     <string name="ratio_label">RATIO</string>
     <string name="reset_timer">BREW</string>
+
+    <string-array name="spinner_array">
+        <item>HOT</item>
+        <item>COLD</item>
+    </string-array>
 </resources>
