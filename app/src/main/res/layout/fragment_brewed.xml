@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="55">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/pressta_no_background"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45">
+
+        <android.support.v7.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnCount="2"
+            app:rowCount="2">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/light_blue"
+                app:layout_columnWeight="50"
+                app:layout_rowWeight="50">
+
+                <ImageView
+                    android:id="@+id/img_view_quick_brew"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_flash_on_black_24dp"
+                    android:tint="@color/teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_view_quick_brew"
+                    android:layout_centerHorizontal="true"
+                    android:text="QUICK BREW"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginStart="2dp"
+                android:background="@color/light_blue"
+                app:layout_columnWeight="50"
+                app:layout_rowWeight="50">
+
+                <ImageView
+                    android:id="@+id/img_view_auto_brew"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_flash_auto_black_24dp"
+                    android:tint="@color/teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_view_auto_brew"
+                    android:layout_centerHorizontal="true"
+                    android:text="AUTO BREW"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/light_blue"
+                app:layout_columnWeight="50"
+                app:layout_rowWeight="50">
+
+                <ImageView
+                    android:id="@+id/img_view_my_brews"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_person_black_24dp"
+                    android:tint="@color/teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_view_my_brews"
+                    android:layout_centerHorizontal="true"
+                    android:text="MY BREWS"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/light_blue"
+                app:layout_columnWeight="50"
+                app:layout_rowWeight="50">
+
+                <ImageView
+                    android:id="@+id/img_view_recent_brews"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_list_black_24dp"
+                    android:tint="@color/teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_view_recent_brews"
+                    android:layout_centerHorizontal="true"
+                    android:text="RECENT BREWS"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.GridLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

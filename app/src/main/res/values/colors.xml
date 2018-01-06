@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#298594</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="wet_asphalt">#151B29</color>
+    <color name="wet_asphalt_dark">#273C51</color>
+    <color name="concrete">#95A5A6</color>
+    <color name="transparent">#00000000</color>
+    <color name="dull_yellow">#F5FA55</color>
+
+    <color name="teal">#283940</color>
+    <color name="light_blue">#298594</color>
+</resources>
