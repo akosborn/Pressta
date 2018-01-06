@@ -19,10 +19,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import me.andrewosborn.pressta.R;
-import me.andrewosborn.pressta.model.Calculation;
+import me.andrewosborn.pressta.model.Brew;
+import me.andrewosborn.pressta.model.Type;
 
 public class CalculationFragment extends Fragment
 {
+    private static final String ARG_BREW_TYPE = "brew_type";
+
     private long durationInMillis;
 
     private EditText mCoffeeWeightField;
@@ -34,7 +37,19 @@ public class CalculationFragment extends Fragment
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
 
-    private Calculation mCalculation = new Calculation();
+    private Brew mBrew = new Brew();
+    private Type mBrewType;
+
+    public static CalculationFragment newInstance(Type brewType)
+    {
+        CalculationFragment fragment = new CalculationFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BREW_TYPE, brewType);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -62,12 +77,12 @@ public class CalculationFragment extends Fragment
                 if (!charSequence.toString().equals(""))
                 {
                     int coffeeWeight = Integer.parseInt(charSequence.toString());
-                    int waterWeight = mCalculation.getCalculatedWater(coffeeWeight);
-                    mCalculation.setCoffeeWeight(coffeeWeight);
-                    mCalculation.setWaterWeight(waterWeight);
+                    int waterWeight = mBrew.getCalculatedWater(coffeeWeight);
+                    mBrew.setCoffeeWeight(coffeeWeight);
+                    mBrew.setWaterWeight(waterWeight);
 
                     if (getActivity().getCurrentFocus() == mCoffeeWeightField)
-                        mWaterWeightField.setText(String.valueOf(mCalculation.getWaterWeight()));
+                        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
                 }
                 else
                 {
@@ -98,12 +113,12 @@ public class CalculationFragment extends Fragment
                 if (!charSequence.toString().equals(""))
                 {
                     int waterWeight = Integer.parseInt(charSequence.toString());
-                    int coffeeWeight = mCalculation.getCalculatedCoffee(waterWeight);
-                    mCalculation.setWaterWeight(waterWeight);
-                    mCalculation.setCoffeeWeight(coffeeWeight);
+                    int coffeeWeight = mBrew.getCalculatedCoffee(waterWeight);
+                    mBrew.setWaterWeight(waterWeight);
+                    mBrew.setCoffeeWeight(coffeeWeight);
 
                     if (getActivity().getCurrentFocus() == mWaterWeightField)
-                        mCoffeeWeightField.setText(String.valueOf(mCalculation.getCoffeeWeight()));
+                        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
                 }
                 else
                 {
@@ -154,7 +169,7 @@ public class CalculationFragment extends Fragment
                 if (b)
                 {
                     mRatioTextView.setText(String.valueOf(i + 1));
-                    mCalculation.setRatio(seekBar.getProgress() + 1);
+                    mBrew.setRatio(seekBar.getProgress() + 1);
                 }
                 else
                     mRatioTextView.setText(String.valueOf(i));
@@ -174,22 +189,30 @@ public class CalculationFragment extends Fragment
 
             }
         });
-        mCalculation.setRatio(16);
-        mRatioSeekbar.setProgress(mCalculation.getRatio());
+        mBrew.setRatio(16);
+        mRatioSeekbar.setProgress(mBrew.getRatio());
 
-        mCalculation.setCoffeeWeight(20);
-        mCalculation.setWaterWeight(mCalculation.getCalculatedWater(mCalculation.getCoffeeWeight()));
-        mCoffeeWeightField.setText(String.valueOf(mCalculation.getCoffeeWeight()));
-        mWaterWeightField.setText(String.valueOf(mCalculation.getWaterWeight()));
+        mBrew.setCoffeeWeight(20);
+        mBrew.setWaterWeight(mBrew.getCalculatedWater(mBrew.getCoffeeWeight()));
+        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
+        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
 
         return view;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+         mBrewType = (Type) getArguments().getSerializable(ARG_BREW_TYPE);
+    }
+
     private void calculate()
     {
-        mCalculation.setWaterWeight(mCalculation.getCalculatedWater(mCalculation.getCoffeeWeight()));
-        mCoffeeWeightField.setText(String.valueOf(mCalculation.getCoffeeWeight()));
-        mWaterWeightField.setText(String.valueOf(mCalculation.getWaterWeight()));
+        mBrew.setWaterWeight(mBrew.getCalculatedWater(mBrew.getCoffeeWeight()));
+        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
+        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
     }
 
     private void setupTimer(final float minutes)

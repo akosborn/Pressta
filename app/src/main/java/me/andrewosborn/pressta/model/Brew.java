@@ -1,17 +1,28 @@
 package me.andrewosborn.pressta.model;
 
-public class Calculation
+public class Brew
 {
     private static final double BREW_DURATION = 4.5;
 
+    private Type type;
     private int coffeeWeight;
     private int waterWeight;
     private int ratio;
 
-    public Calculation()
+    public Brew()
     {
         this.coffeeWeight = 0;
         this.waterWeight = 0;
+    }
+
+    public Type getType()
+    {
+        return type;
+    }
+
+    public void setType(Type type)
+    {
+        this.type = type;
     }
 
     public int getCoffeeWeight()

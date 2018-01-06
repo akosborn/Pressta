@@ -2,11 +2,18 @@ package me.andrewosborn.pressta.controller;
 
 import android.support.v4.app.Fragment;
 
+import me.andrewosborn.pressta.model.Type;
+
 public class CalculationActivity extends SingleFragmentActivity
 {
+    private static final String EXTRA_BREW_TYPE = "me.andrewosborn.extra.brew_type";
+
     @Override
     protected Fragment createFragment()
     {
-        return new CalculationFragment();
+        Type brewType = (Type) getIntent()
+                .getSerializableExtra(EXTRA_BREW_TYPE);
+
+        return CalculationFragment.newInstance(brewType);
     }
 }

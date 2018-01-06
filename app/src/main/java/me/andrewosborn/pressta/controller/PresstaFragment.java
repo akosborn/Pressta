@@ -12,13 +12,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import me.andrewosborn.pressta.R;
+import me.andrewosborn.pressta.model.Type;
 
 
 public class PresstaFragment extends Fragment
 {
+    private static final String EXTRA_BREW_TYPE = "me.andrewosborn.extra.brew_type";
+
     private RelativeLayout mQuickBrewRelativeLayout;
     private TextView mQuickColdBrewTextView;
     private TextView mQuickHotBrewTextView;
+
+    private Type mBrewType = Type.HOT;
 
     public static Fragment newInstance()
     {
@@ -42,6 +47,7 @@ public class PresstaFragment extends Fragment
             public void onClick(View view)
             {
                 Intent intent = new Intent(getActivity(), CalculationActivity.class);
+                intent.putExtra(EXTRA_BREW_TYPE, mBrewType);
                 startActivity(intent);
             }
         });
@@ -53,6 +59,7 @@ public class PresstaFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+                mBrewType = Type.HOT;
                 mQuickColdBrewTextView.setBackgroundColor(Color.TRANSPARENT);
                 mQuickHotBrewTextView.setBackgroundColor(getResources().getColor(R.color.opaque_black));
             }
@@ -64,6 +71,7 @@ public class PresstaFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+                mBrewType = Type.COLD;
                 mQuickHotBrewTextView.setBackgroundColor(Color.TRANSPARENT);
                 mQuickColdBrewTextView.setBackgroundColor(getResources().getColor(R.color.opaque_black));
             }
