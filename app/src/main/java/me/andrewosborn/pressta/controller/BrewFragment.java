@@ -1,5 +1,9 @@
 package me.andrewosborn.pressta.controller;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -7,12 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -22,7 +28,7 @@ import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
 
-public class CalculationFragment extends Fragment
+public class BrewFragment extends Fragment
 {
     private static final String ARG_BREW_TYPE = "brew_type";
 
@@ -36,13 +42,14 @@ public class CalculationFragment extends Fragment
     private TextView mTimeRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
+    private ImageView mLogoImageView;
 
     private Brew mBrew = new Brew();
     private Type mBrewType;
 
-    public static CalculationFragment newInstance(Type brewType)
+    public static BrewFragment newInstance(Type brewType)
     {
-        CalculationFragment fragment = new CalculationFragment();
+        BrewFragment fragment = new BrewFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(ARG_BREW_TYPE, brewType);
@@ -60,7 +67,7 @@ public class CalculationFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate and get reference to calculation fragment view
-        View view = inflater.inflate(R.layout.fragment_calculation, container, false);
+        View view = inflater.inflate(R.layout.fragment_brew, container, false);
 
         mCoffeeWeightField = (EditText) view.findViewById(R.id.edit_text_coffee_weight);
         mCoffeeWeightField.addTextChangedListener(new TextWatcher()
@@ -139,6 +146,8 @@ public class CalculationFragment extends Fragment
         mBrewProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_brew_countdown);
 
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
+
+        createTimer(4.0f);
         mTimeRemainingTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -151,12 +160,10 @@ public class CalculationFragment extends Fragment
                 Animation animation = new RotateAnimation(0.0f, 90.0f,
                         absoluteCenterPivotX, absoluteCenterPivotY);
                 animation.setFillAfter(true);
+                mCountDownTimer.start();
                 mBrewProgressBar.startAnimation(animation);
-                startTimer();
             }
         });
-
-        setupTimer(4.5f);
 
         mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
 
@@ -197,6 +204,8 @@ public class CalculationFragment extends Fragment
         mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
 
+        mLogoImageView = (ImageView) view.findViewById(R.id.img_view_pressta_logo);
+
         return view;
     }
 
@@ -215,44 +224,60 @@ public class CalculationFragment extends Fragment
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
     }
 
-    private void setupTimer(final float minutes)
+    private void createTimer(float minutes)
     {
         final int durationInSeconds = (int) (minutes * 60);
         durationInMillis = (long) (60 * minutes * 1000);
 
-        mBrewProgressBar.setMax((int) durationInMillis);
-        mBrewProgressBar.setProgress((int) durationInMillis);
+        mBrewProgressBar.setMax(durationInSeconds);
+        mBrewProgressBar.setProgress(durationInSeconds);
 
         mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
                 durationInSeconds / 60, durationInSeconds % 60));
-    }
 
-    private void startTimer()
-    {
-        if (mCountDownTimer == null)
+        mCountDownTimer = new CountDownTimer(durationInMillis, 500)
         {
-            mCountDownTimer = new CountDownTimer(durationInMillis, 100)
+            int secondsLeft = 0;
+
+            @Override
+            public void onTick(long msRemaining)
             {
-                @Override
-                public void onTick(long remainingTimeInMilliseconds)
+                Log.i("CountDownTimer", "Tick at " + String.valueOf(msRemaining) + " ms");
+
+                if (Math.round((float) msRemaining / 1000.0f) != secondsLeft)
                 {
-                    int secondsRemaining = (int) remainingTimeInMilliseconds / 1000;
-                    mBrewProgressBar.setProgress((int) remainingTimeInMilliseconds);
+                    Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
+
+                    secondsLeft = Math.round((float) msRemaining / 1000.0f);
                     mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
-                            secondsRemaining / 60, secondsRemaining % 60));
+                            secondsLeft / 60, secondsLeft % 60));
                 }
 
-                @Override
-                public void onFinish()
+                mBrewProgressBar.setProgress(secondsLeft);
+
+                Log.i("CountDownTimer", "Progress at " + mBrewProgressBar.getProgress());
+            }
+
+            @Override
+            public void onFinish()
+            {
+                mBrewProgressBar.setProgress(0);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
                 {
-                    mBrewProgressBar.setProgress(0);
-                    mTimeRemainingTextView.setText(R.string.reset_timer);
+                    ObjectAnimator animator = ObjectAnimator.ofArgb(
+                            mTimeRemainingTextView,
+                            "textColor",
+                            Color.WHITE,
+                            Color.RED,
+                            Color.WHITE);
+                    animator.setDuration(1500);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    animator.setRepeatMode(ValueAnimator.REVERSE);
+                    animator.setRepeatCount(ValueAnimator.INFINITE);
+                    animator.start();
                 }
-            }.start();
-        }
-        else
-        {
-            mCountDownTimer.start();
-        }
+            }
+        };
     }
 }

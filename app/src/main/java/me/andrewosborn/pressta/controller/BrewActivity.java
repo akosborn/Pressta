@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 
 import me.andrewosborn.pressta.model.Type;
 
-public class CalculationActivity extends SingleFragmentActivity
+public class BrewActivity extends SingleFragmentActivity
 {
     private static final String EXTRA_BREW_TYPE = "me.andrewosborn.extra.brew_type";
 
@@ -14,6 +14,6 @@ public class CalculationActivity extends SingleFragmentActivity
         Type brewType = (Type) getIntent()
                 .getSerializableExtra(EXTRA_BREW_TYPE);
 
-        return CalculationFragment.newInstance(brewType);
+        return BrewFragment.newInstance(brewType);
     }
 }

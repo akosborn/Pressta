@@ -46,7 +46,7 @@ public class PresstaFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(getActivity(), CalculationActivity.class);
+                Intent intent = new Intent(getActivity(), BrewActivity.class);
                 intent.putExtra(EXTRA_BREW_TYPE, mBrewType);
                 startActivity(intent);
             }
