@@ -6,6 +6,52 @@
                 xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
+        android:id="@+id/rel_layout_duration"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:id="@+id/lin_layout_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_text_cold_brew_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="70sp"
+                android:background="@color/transparent"
+                android:cursorVisible="false"
+                tools:text="12"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="h"
+                android:text="@string/hours_label"
+                android:textSize="40sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/lin_layout_duration"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="BREW TIME"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/layout_progress_bar"
         android:layout_width="300dp"
         android:layout_height="300dp"

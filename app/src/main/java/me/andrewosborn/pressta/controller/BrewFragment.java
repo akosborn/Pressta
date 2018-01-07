@@ -32,8 +32,6 @@ public class BrewFragment extends Fragment
 {
     private static final String ARG_BREW_TYPE = "brew_type";
 
-    private long durationInMillis;
-
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ProgressBar mBrewProgressBar;
@@ -42,9 +40,10 @@ public class BrewFragment extends Fragment
     private TextView mTimeRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
-    private ImageView mLogoImageView;
+    private EditText mColdBrewDurationEditText;
+    private RelativeLayout mDurationRelLayout;
 
-    private Brew mBrew = new Brew();
+    private Brew mBrew;
     private Type mBrewType;
 
     public static BrewFragment newInstance(Type brewType)
@@ -142,12 +141,26 @@ public class BrewFragment extends Fragment
         });
 
         mProgressBarLayout = (RelativeLayout) view.findViewById(R.id.layout_progress_bar);
-
         mBrewProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_brew_countdown);
-
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
 
-        createTimer(4.0f);
+        mColdBrewDurationEditText = (EditText) view.findViewById(R.id.edit_text_cold_brew_duration);
+
+        mDurationRelLayout = (RelativeLayout) view.findViewById(R.id.rel_layout_duration);
+
+        if (mBrewType.equals(Type.HOT))
+            mBrew = new Brew(mBrewType, 23, 16, 4.5f);
+        else if (mBrewType.equals(Type.COLD))
+        {
+            mBrew = new Brew(mBrewType, 23, 8, 720f);
+            mBrewProgressBar.setVisibility(View.INVISIBLE);
+            mTimeRemainingTextView.setVisibility(View.INVISIBLE);
+            mDurationRelLayout.setVisibility(View.VISIBLE);
+            mColdBrewDurationEditText.setText(String.valueOf((int) mBrew.getBrewDurationMin() / 60));
+        }
+
+
+        createTimer(mBrew.getBrewDurationMin());
         mTimeRemainingTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -196,15 +209,10 @@ public class BrewFragment extends Fragment
 
             }
         });
-        mBrew.setRatio(16);
-        mRatioSeekbar.setProgress(mBrew.getRatio());
 
-        mBrew.setCoffeeWeight(20);
-        mBrew.setWaterWeight(mBrew.getCalculatedWater(mBrew.getCoffeeWeight()));
+        mRatioSeekbar.setProgress(mBrew.getRatio());
         mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
-
-        mLogoImageView = (ImageView) view.findViewById(R.id.img_view_pressta_logo);
 
         return view;
     }
@@ -234,7 +242,7 @@ public class BrewFragment extends Fragment
     private void createTimer(float minutes)
     {
         final int durationInSeconds = (int) (minutes * 60);
-        durationInMillis = (long) (60 * minutes * 1000);
+        long durationInMillis = (long) (60 * minutes * 1000);
 
         mBrewProgressBar.setMax(durationInSeconds);
         mBrewProgressBar.setProgress(durationInSeconds);

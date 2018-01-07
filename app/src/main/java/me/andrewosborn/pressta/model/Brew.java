@@ -2,12 +2,29 @@ package me.andrewosborn.pressta.model;
 
 public class Brew
 {
-    private static final double BREW_DURATION = 4.5;
-
     private Type type;
     private int coffeeWeight;
     private int waterWeight;
     private int ratio;
+    private float brewDurationMin;
+
+    public Brew(Type type, int coffeeWeight, int ratio, float brewDurationMin)
+    {
+        this.type = type;
+        this.coffeeWeight = coffeeWeight;
+        this.waterWeight = coffeeWeight * ratio;
+        this.ratio = ratio;
+        this.brewDurationMin = brewDurationMin;
+    }
+
+    public Brew(Type type, int ratio, float brewDurationMin, int waterWeight)
+    {
+        this.type = type;
+        this.coffeeWeight = ratio / waterWeight;
+        this.waterWeight = waterWeight;
+        this.ratio = ratio;
+        this.brewDurationMin = brewDurationMin;
+    }
 
     public Brew()
     {
@@ -65,8 +82,13 @@ public class Brew
         return waterWeight/ratio;
     }
 
-    public static double getBrewDuration()
+    public float getBrewDurationMin()
     {
-        return BREW_DURATION;
+        return brewDurationMin;
+    }
+
+    public void setBrewDurationMin(float brewDurationMin)
+    {
+        this.brewDurationMin = brewDurationMin;
     }
 }
