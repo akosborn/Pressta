@@ -217,6 +217,13 @@ public class BrewFragment extends Fragment
          mBrewType = (Type) getArguments().getSerializable(ARG_BREW_TYPE);
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        mCountDownTimer.cancel();
+    }
+
     private void calculate()
     {
         mBrew.setWaterWeight(mBrew.getCalculatedWater(mBrew.getCoffeeWeight()));
