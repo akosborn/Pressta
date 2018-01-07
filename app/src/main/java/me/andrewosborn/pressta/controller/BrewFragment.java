@@ -251,9 +251,8 @@ public class BrewFragment extends Fragment
                     secondsLeft = Math.round((float) msRemaining / 1000.0f);
                     mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
                             secondsLeft / 60, secondsLeft % 60));
+                    mBrewProgressBar.setProgress(secondsLeft);
                 }
-
-                mBrewProgressBar.setProgress(secondsLeft);
 
                 Log.i("CountDownTimer", "Progress at " + mBrewProgressBar.getProgress());
             }
