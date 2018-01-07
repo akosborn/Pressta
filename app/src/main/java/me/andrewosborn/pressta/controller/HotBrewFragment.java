@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -28,10 +27,8 @@ import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
 
-public class BrewFragment extends Fragment
+public class HotBrewFragment extends Fragment
 {
-    private static final String ARG_BREW_TYPE = "brew_type";
-
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ProgressBar mBrewProgressBar;
@@ -40,21 +37,12 @@ public class BrewFragment extends Fragment
     private TextView mTimeRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
-    private EditText mColdBrewDurationEditText;
-    private RelativeLayout mDurationRelLayout;
 
-    private Brew mBrew;
-    private Type mBrewType;
+    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, 4.5f);
 
-    public static BrewFragment newInstance(Type brewType)
+    public static HotBrewFragment newInstance()
     {
-        BrewFragment fragment = new BrewFragment();
-
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BREW_TYPE, brewType);
-        fragment.setArguments(args);
-
-        return fragment;
+        return new HotBrewFragment();
     }
 
     @Nullable
@@ -66,7 +54,7 @@ public class BrewFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate and get reference to calculation fragment view
-        View view = inflater.inflate(R.layout.fragment_brew, container, false);
+        View view = inflater.inflate(R.layout.fragment_hot_brew, container, false);
 
         mCoffeeWeightField = (EditText) view.findViewById(R.id.edit_text_coffee_weight);
         mCoffeeWeightField.addTextChangedListener(new TextWatcher()
@@ -144,22 +132,6 @@ public class BrewFragment extends Fragment
         mBrewProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_brew_countdown);
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
 
-        mColdBrewDurationEditText = (EditText) view.findViewById(R.id.edit_text_cold_brew_duration);
-
-        mDurationRelLayout = (RelativeLayout) view.findViewById(R.id.rel_layout_duration);
-
-        if (mBrewType.equals(Type.HOT))
-            mBrew = new Brew(mBrewType, 23, 16, 4.5f);
-        else if (mBrewType.equals(Type.COLD))
-        {
-            mBrew = new Brew(mBrewType, 23, 8, 720f);
-            mBrewProgressBar.setVisibility(View.INVISIBLE);
-            mTimeRemainingTextView.setVisibility(View.INVISIBLE);
-            mDurationRelLayout.setVisibility(View.VISIBLE);
-            mColdBrewDurationEditText.setText(String.valueOf((int) mBrew.getBrewDurationMin() / 60));
-        }
-
-
         createTimer(mBrew.getBrewDurationMin());
         mTimeRemainingTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -215,14 +187,6 @@ public class BrewFragment extends Fragment
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
 
         return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-         mBrewType = (Type) getArguments().getSerializable(ARG_BREW_TYPE);
     }
 
     @Override

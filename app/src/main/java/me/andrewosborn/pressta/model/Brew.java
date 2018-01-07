@@ -26,12 +26,6 @@ public class Brew
         this.brewDurationMin = brewDurationMin;
     }
 
-    public Brew()
-    {
-        this.coffeeWeight = 0;
-        this.waterWeight = 0;
-    }
-
     public Type getType()
     {
         return type;

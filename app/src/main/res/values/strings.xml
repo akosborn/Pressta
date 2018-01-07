@@ -14,9 +14,5 @@
     <string name="my_brews_label">MY BREWS</string>
     <string name="quick_brew_label">QUICK BREW</string>
     <string name="hours_label">h</string>
-
-    <string-array name="spinner_array">
-        <item>HOT</item>
-        <item>COLD</item>
-    </string-array>
+    <string name="brew_time">BREW TIME</string>
 </resources>

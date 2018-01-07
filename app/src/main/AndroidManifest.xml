@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".controller.BrewActivity"/>
+        <activity android:name=".controller.HotBrewActivity"/>
+        <activity android:name=".controller.ColdBrewActivity"/>
     </application>
 
 </manifest>

@@ -9,8 +9,7 @@
         android:id="@+id/rel_layout_duration"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible">
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/lin_layout_duration"
@@ -47,42 +46,7 @@
             android:layout_above="@id/lin_layout_duration"
             android:textSize="15sp"
             android:textColor="@android:color/white"
-            android:text="BREW TIME"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_progress_bar"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_centerHorizontal="true">
-
-        <ProgressBar
-            android:id="@+id/progress_bar_brew_countdown"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:indeterminate="false"
-            android:background="@drawable/circular_progress_bar_black"
-            android:progressDrawable="@drawable/circular_progress_bar_concrete"/>
-
-        <TextView
-            android:id="@+id/text_view_time_remaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            tools:text="4:30"
-            android:textSize="70sp"
-            android:textColor="@android:color/white"/>
-
-        <ImageView
-            android:id="@+id/img_view_pressta_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/pressta_no_background"
-            android:visibility="invisible"/>
+            android:text="@string/brew_time"/>
 
     </RelativeLayout>
 
