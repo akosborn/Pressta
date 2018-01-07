@@ -244,6 +244,7 @@ public class BrewFragment extends Fragment
             {
                 Log.i("CountDownTimer", "Tick at " + String.valueOf(msRemaining) + " ms");
 
+                // checks to see if UI update is necessary
                 if (Math.round((float) msRemaining / 1000.0f) != secondsLeft)
                 {
                     Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
