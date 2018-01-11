@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/teal"
-                xmlns:tools="http://schemas.android.com/tools">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal">
 
-    <RelativeLayout
-        android:id="@+id/layout_progress_bar"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_centerHorizontal="true">
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/con_layout_countdown"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
             android:id="@+id/progress_bar_brew_countdown"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:indeterminate="false"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:background="@drawable/circular_progress_bar_black"
             android:progressDrawable="@drawable/circular_progress_bar_concrete"/>
 
@@ -25,32 +41,42 @@
             android:id="@+id/text_view_time_remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="4:30"
-            android:textSize="70sp"
+            android:textSize="60sp"
             android:textColor="@android:color/white"/>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/layout_progress_bar"
-        android:layout_centerHorizontal="true">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/rel_layout_weights"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp">
 
         <LinearLayout
-            android:id="@+id/linear_layout_weights"
-            android:layout_width="300dp"
+            android:id="@+id/lin_layout_weights"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="20dp"
             android:background="@drawable/layout_rounded_bg">
+
             <EditText
                 android:id="@+id/edit_text_coffee_weight"
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="50"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:textSize="30sp"
@@ -58,10 +84,12 @@
                 android:textColor="@android:color/white"
                 tools:text="23"
                 android:cursorVisible="false"/>
+
             <EditText
                 android:id="@+id/edit_text_water_weight"
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="50"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:textSize="30sp"
@@ -73,35 +101,44 @@
 
         <LinearLayout
             android:id="@+id/linear_layout_weight_labels"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/linear_layout_weights"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/lin_layout_weights"
             android:layout_marginBottom="10dp">
+
             <TextView
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="50"
                 android:gravity="center_horizontal"
                 android:text="@string/text_view_label_coffee"
                 android:labelFor="@id/edit_text_coffee_weight"
                 android:textSize="15sp"/>
+
             <TextView
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="50"
                 android:gravity="center_horizontal"
                 android:text="@string/text_view_label_water"
                 android:labelFor="@id/edit_text_water_weight"
                 android:textSize="15sp"/>
+
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/rel_layout_ratio"
-            android:layout_width="300dp"
+            android:id="@+id/lin_layout_ratio"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linear_layout_weight_labels"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="1"
             android:orientation="vertical"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:layout_above="@id/linear_layout_weight_labels"
             android:background="@drawable/layout_rounded_bg">
 
             <TextView
@@ -122,14 +159,16 @@
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_above="@id/rel_layout_ratio"
-            android:layout_centerHorizontal="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/lin_layout_ratio"
+            android:gravity="center_horizontal"
             android:text="@string/ratio_label"
             android:textSize="15sp"
             android:layout_marginBottom="10dp"/>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

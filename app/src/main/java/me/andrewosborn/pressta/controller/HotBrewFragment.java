@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.Editable;
@@ -33,7 +34,7 @@ public class HotBrewFragment extends Fragment
     private EditText mWaterWeightField;
     private ProgressBar mBrewProgressBar;
     private CountDownTimer mCountDownTimer;
-    private RelativeLayout mProgressBarLayout;
+    private ConstraintLayout mProgressBarLayout;
     private TextView mTimeRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
@@ -128,7 +129,7 @@ public class HotBrewFragment extends Fragment
             }
         });
 
-        mProgressBarLayout = (RelativeLayout) view.findViewById(R.id.layout_progress_bar);
+        mProgressBarLayout = (ConstraintLayout) view.findViewById(R.id.con_layout_countdown);
         mBrewProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_brew_countdown);
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
 
