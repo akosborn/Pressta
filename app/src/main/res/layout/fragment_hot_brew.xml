@@ -18,24 +18,42 @@
         android:id="@+id/con_layout_countdown"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingTop="20dp"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ProgressBar
+        <com.github.lzyzsd.circleprogress.ArcProgress
             android:id="@+id/progress_bar_brew_countdown"
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:indeterminate="false"
             app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:background="@drawable/circular_progress_bar_black"
-            android:progressDrawable="@drawable/circular_progress_bar_concrete"/>
+            app:arc_unfinished_color="@color/opaque_black"
+            app:arc_finished_color="@color/light_blue"
+            app:arc_text_size="0dp"
+            app:arc_suffix_text_size="0dp"
+            app:arc_text_color="@android:color/white"
+            app:arc_bottom_text_size="15sp"
+            app:arc_bottom_text="TIME REMAINING"/>
+
+        <!--<ProgressBar-->
+            <!--android:id="@+id/progress_bar_brew_countdown"-->
+            <!--style="?android:attr/progressBarStyleHorizontal"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:indeterminate="false"-->
+            <!--app:layout_constraintDimensionRatio="W,1:1"-->
+            <!--app:layout_constraintTop_toTopOf="parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--android:background="@drawable/circular_progress_bar_black"-->
+            <!--android:progressDrawable="@drawable/circular_progress_bar_concrete"/>-->
 
         <TextView
             android:id="@+id/text_view_time_remaining"
@@ -47,7 +65,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="4:30"
             android:textSize="60sp"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:visibility="visible"/>
 
     </android.support.constraint.ConstraintLayout>
 

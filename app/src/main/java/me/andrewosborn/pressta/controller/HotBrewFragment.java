@@ -20,9 +20,10 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
@@ -32,7 +33,7 @@ public class HotBrewFragment extends Fragment
 {
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
-    private ProgressBar mBrewProgressBar;
+    private ArcProgress mArcProgress;
     private CountDownTimer mCountDownTimer;
     private ConstraintLayout mProgressBarLayout;
     private TextView mTimeRemainingTextView;
@@ -130,7 +131,7 @@ public class HotBrewFragment extends Fragment
         });
 
         mProgressBarLayout = (ConstraintLayout) view.findViewById(R.id.con_layout_countdown);
-        mBrewProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_brew_countdown);
+        mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
 
         createTimer(mBrew.getBrewDurationMin());
@@ -139,15 +140,16 @@ public class HotBrewFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                float progressBarLayoutWidth = mProgressBarLayout.getWidth();
-                float progressBarLayoutHeight = mProgressBarLayout.getHeight();
-                float absoluteCenterPivotX = progressBarLayoutWidth/2;
-                float absoluteCenterPivotY = progressBarLayoutHeight/2;
-                Animation animation = new RotateAnimation(0.0f, 90.0f,
-                        absoluteCenterPivotX, absoluteCenterPivotY);
-                animation.setFillAfter(true);
                 mCountDownTimer.start();
-                mBrewProgressBar.startAnimation(animation);
+            }
+        });
+
+        mArcProgress.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mCountDownTimer.start();
             }
         });
 
@@ -209,8 +211,8 @@ public class HotBrewFragment extends Fragment
         final int durationInSeconds = (int) (minutes * 60);
         long durationInMillis = (long) (60 * minutes * 1000);
 
-        mBrewProgressBar.setMax(durationInSeconds);
-        mBrewProgressBar.setProgress(durationInSeconds);
+        mArcProgress.setMax(durationInSeconds);
+        mArcProgress.setProgress(durationInSeconds);
 
         mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
                 durationInSeconds / 60, durationInSeconds % 60));
@@ -232,16 +234,16 @@ public class HotBrewFragment extends Fragment
                     secondsLeft = Math.round((float) msRemaining / 1000.0f);
                     mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
                             secondsLeft / 60, secondsLeft % 60));
-                    mBrewProgressBar.setProgress(secondsLeft);
+                    mArcProgress.setProgress(secondsLeft);
                 }
 
-                Log.i("CountDownTimer", "Progress at " + mBrewProgressBar.getProgress());
+                Log.i("CountDownTimer", "Progress at " + mArcProgress.getProgress());
             }
 
             @Override
             public void onFinish()
             {
-                mBrewProgressBar.setProgress(0);
+                mArcProgress.setProgress(0);
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
                 {
