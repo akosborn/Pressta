@@ -16,10 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -31,6 +29,7 @@ import me.andrewosborn.pressta.model.Type;
 
 public class HotBrewFragment extends Fragment
 {
+    public static final int COUNTDOWN_INTERVAL = 500;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ArcProgress mArcProgress;
@@ -39,6 +38,12 @@ public class HotBrewFragment extends Fragment
     private TextView mTimeRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
+    private ImageButton mStartTimerButton;
+    private ImageButton mPauseTimerButton;
+    private ImageButton mResetTimerButton;
+
+    private int mTimeRemaining;
+    private boolean mTimerPaused = false;
 
     private static final Brew mBrew = new Brew(Type.HOT, 23, 16, 4.5f);
 
@@ -135,23 +140,6 @@ public class HotBrewFragment extends Fragment
         mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
 
         createTimer(mBrew.getBrewDurationMin());
-        mTimeRemainingTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mCountDownTimer.start();
-            }
-        });
-
-        mArcProgress.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mCountDownTimer.start();
-            }
-        });
 
         mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
 
@@ -185,6 +173,55 @@ public class HotBrewFragment extends Fragment
             }
         });
 
+        mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
+        mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
+        mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
+
+        mStartTimerButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mTimerPaused)
+                {
+                    long durationInMillis = (long) (mTimeRemaining * 1000);
+                    mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
+                    mTimerPaused = false;
+                }
+
+                mStartTimerButton.setVisibility(View.GONE);
+                mPauseTimerButton.setVisibility(View.VISIBLE);
+                mCountDownTimer.start();
+            }
+        });
+
+        mPauseTimerButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mTimerPaused = true;
+                mPauseTimerButton.setVisibility(View.GONE);
+                mStartTimerButton.setVisibility(View.VISIBLE);
+                mCountDownTimer.cancel();
+            }
+        });
+
+        mResetTimerButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mCountDownTimer.cancel();
+                mArcProgress.setProgress(mArcProgress.getMax());
+                mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
+                        mArcProgress.getProgress() / 60, mArcProgress.getProgress() % 60));
+                mTimerPaused = false;
+                mPauseTimerButton.setVisibility(View.GONE);
+                mStartTimerButton.setVisibility(View.VISIBLE);
+            }
+        });
+
         mRatioSeekbar.setProgress(mBrew.getRatio());
         mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
@@ -206,6 +243,57 @@ public class HotBrewFragment extends Fragment
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
     }
 
+    public class MyTimer extends CountDownTimer
+    {
+        int secondsLeft = 0;
+
+        public MyTimer(long millisInFuture, long countDownInterval)
+        {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long msRemaining)
+        {
+            Log.i("CountDownTimer", "Tick at " + String.valueOf(msRemaining) + " ms");
+
+            // checks to see if UI update is necessary
+            if (Math.round((float) msRemaining / 1000.0f) != secondsLeft)
+            {
+                Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
+
+                secondsLeft = Math.round((float) msRemaining / 1000.0f);
+                mTimeRemaining = secondsLeft;
+                mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
+                        secondsLeft / 60, secondsLeft % 60));
+                mArcProgress.setProgress(secondsLeft);
+            }
+
+            Log.i("CountDownTimer", "Progress at " + mArcProgress.getProgress());
+        }
+
+        @Override
+        public void onFinish()
+        {
+            mArcProgress.setProgress(0);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+            {
+                ObjectAnimator animator = ObjectAnimator.ofArgb(
+                        mTimeRemainingTextView,
+                        "textColor",
+                        Color.WHITE,
+                        Color.RED,
+                        Color.WHITE);
+                animator.setDuration(1500);
+                animator.setEvaluator(new ArgbEvaluator());
+                animator.setRepeatMode(ValueAnimator.REVERSE);
+                animator.setRepeatCount(ValueAnimator.INFINITE);
+                animator.start();
+            }
+        }
+    }
+
     private void createTimer(float minutes)
     {
         final int durationInSeconds = (int) (minutes * 60);
@@ -217,49 +305,6 @@ public class HotBrewFragment extends Fragment
         mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
                 durationInSeconds / 60, durationInSeconds % 60));
 
-        mCountDownTimer = new CountDownTimer(durationInMillis, 500)
-        {
-            int secondsLeft = 0;
-
-            @Override
-            public void onTick(long msRemaining)
-            {
-                Log.i("CountDownTimer", "Tick at " + String.valueOf(msRemaining) + " ms");
-
-                // checks to see if UI update is necessary
-                if (Math.round((float) msRemaining / 1000.0f) != secondsLeft)
-                {
-                    Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
-
-                    secondsLeft = Math.round((float) msRemaining / 1000.0f);
-                    mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
-                            secondsLeft / 60, secondsLeft % 60));
-                    mArcProgress.setProgress(secondsLeft);
-                }
-
-                Log.i("CountDownTimer", "Progress at " + mArcProgress.getProgress());
-            }
-
-            @Override
-            public void onFinish()
-            {
-                mArcProgress.setProgress(0);
-
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-                {
-                    ObjectAnimator animator = ObjectAnimator.ofArgb(
-                            mTimeRemainingTextView,
-                            "textColor",
-                            Color.WHITE,
-                            Color.RED,
-                            Color.WHITE);
-                    animator.setDuration(1500);
-                    animator.setEvaluator(new ArgbEvaluator());
-                    animator.setRepeatMode(ValueAnimator.REVERSE);
-                    animator.setRepeatCount(ValueAnimator.INFINITE);
-                    animator.start();
-                }
-            }
-        };
+        mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
     }
 }

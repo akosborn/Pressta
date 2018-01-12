@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\andre\Documents\Programming\Android\Brewed\Brewed.iml" filepath="C:\Users\andre\Documents\Programming\Android\Brewed\Brewed.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pressta.iml" filepath="$PROJECT_DIR$/Pressta.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
