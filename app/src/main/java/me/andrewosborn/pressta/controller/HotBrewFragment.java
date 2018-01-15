@@ -11,6 +11,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +36,8 @@ public class HotBrewFragment extends Fragment
     private ArcProgress mArcProgress;
     private CountDownTimer mCountDownTimer;
     private ConstraintLayout mProgressBarLayout;
-    private TextView mTimeRemainingTextView;
+    private TextView mMinRemainingTextView;
+    private TextView mSecRemainingTextView;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
     private ImageButton mStartTimerButton;
@@ -137,7 +139,8 @@ public class HotBrewFragment extends Fragment
 
         mProgressBarLayout = (ConstraintLayout) view.findViewById(R.id.con_layout_countdown);
         mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
-        mTimeRemainingTextView = (TextView) view.findViewById(R.id.text_view_time_remaining);
+        mMinRemainingTextView = (TextView) view.findViewById(R.id.text_view_min_remaining);
+        mSecRemainingTextView = (TextView) view.findViewById(R.id.text_view_sec_remaining);
 
         createTimer(mBrew.getBrewDurationMin());
 
@@ -214,8 +217,8 @@ public class HotBrewFragment extends Fragment
             {
                 mCountDownTimer.cancel();
                 mArcProgress.setProgress(mArcProgress.getMax());
-                mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
-                        mArcProgress.getProgress() / 60, mArcProgress.getProgress() % 60));
+                mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,mArcProgress.getProgress() / 60)));
+                mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,mArcProgress.getProgress() % 60)));
                 mTimerPaused = false;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
@@ -264,8 +267,8 @@ public class HotBrewFragment extends Fragment
 
                 secondsLeft = Math.round((float) msRemaining / 1000.0f);
                 mTimeRemaining = secondsLeft;
-                mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
-                        secondsLeft / 60, secondsLeft % 60));
+                mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,secondsLeft / 60)));
+                mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,secondsLeft % 60)));
                 mArcProgress.setProgress(secondsLeft);
             }
 
@@ -280,7 +283,7 @@ public class HotBrewFragment extends Fragment
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             {
                 ObjectAnimator animator = ObjectAnimator.ofArgb(
-                        mTimeRemainingTextView,
+                        mMinRemainingTextView,
                         "textColor",
                         Color.WHITE,
                         Color.RED,
@@ -302,8 +305,8 @@ public class HotBrewFragment extends Fragment
         mArcProgress.setMax(durationInSeconds);
         mArcProgress.setProgress(durationInSeconds);
 
-        mTimeRemainingTextView.setText(getString(R.string.timer_countdown,
-                durationInSeconds / 60, durationInSeconds % 60));
+        mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,durationInSeconds / 60)));
+        mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,durationInSeconds % 60)));
 
         mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
     }

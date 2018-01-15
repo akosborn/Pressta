@@ -4,6 +4,12 @@
     <string name="hint_water_in_grams">Water (g)</string>
     <string name="start_timer">Start timer</string>
     <string name="timer_countdown">%1$d:%2$02d</string>
+    <string name="minutes"><![CDATA[
+    %1$d<small>m</small>
+    ]]></string>
+    <string name="seconds"><![CDATA[
+    %1$02d<small>s</small>
+    ]]></string>
     <string name="text_view_label_coffee">COFFEE (g)</string>
     <string name="text_view_label_water">WATER (g)</string>
     <string name="ratio_label">RATIO</string>

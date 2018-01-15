@@ -42,14 +42,28 @@
             app:arc_bottom_text="TIME REMAINING"/>
 
         <TextView
-            android:id="@+id/text_view_time_remaining"
+            android:id="@+id/text_view_min_remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/text_view_sec_remaining"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="4m"
+            android:textSize="60sp"
+            android:textColor="@android:color/white"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/text_view_sec_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/text_view_min_remaining"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="4:30"
+            tools:text="30s"
             android:textSize="60sp"
             android:textColor="@android:color/white"
             android:visibility="visible"/>
@@ -61,7 +75,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintRight_toLeftOf="@id/button_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_time_remaining"
+            app:layout_constraintTop_toBottomOf="@id/text_view_min_remaining"
             android:src="@drawable/ic_pause_circle_outline_black_24dp"
             android:background="?android:selectableItemBackground"
             android:scaleType="fitXY"
@@ -76,7 +90,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toRightOf="@id/button_pause"
             app:layout_constraintRight_toLeftOf="@id/button_reset"
-            app:layout_constraintTop_toBottomOf="@id/text_view_time_remaining"
+            app:layout_constraintTop_toBottomOf="@id/text_view_min_remaining"
             android:src="@drawable/ic_play_arrow_black_24dp"
             android:background="?android:selectableItemBackground"
             android:scaleType="fitXY"
@@ -89,7 +103,7 @@
             android:layout_height="40dp"
             app:layout_constraintLeft_toRightOf="@id/button_start"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_time_remaining"
+            app:layout_constraintTop_toBottomOf="@id/text_view_min_remaining"
             android:src="@drawable/ic_reset_black_24dp"
             android:background="?android:selectableItemBackground"
             android:scaleType="fitXY"
