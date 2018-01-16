@@ -3,6 +3,7 @@ package me.andrewosborn.pressta.controller;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,9 +15,13 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -36,8 +41,8 @@ public class HotBrewFragment extends Fragment
     private ArcProgress mArcProgress;
     private CountDownTimer mCountDownTimer;
     private ConstraintLayout mProgressBarLayout;
-    private TextView mMinRemainingTextView;
-    private TextView mSecRemainingTextView;
+    private EditText mMinRemainingEditText;
+    private EditText mSecRemainingEditText;
     private AppCompatSeekBar mRatioSeekbar;
     private TextView mRatioTextView;
     private ImageButton mStartTimerButton;
@@ -139,8 +144,40 @@ public class HotBrewFragment extends Fragment
 
         mProgressBarLayout = (ConstraintLayout) view.findViewById(R.id.con_layout_countdown);
         mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
-        mMinRemainingTextView = (TextView) view.findViewById(R.id.text_view_min_remaining);
-        mSecRemainingTextView = (TextView) view.findViewById(R.id.text_view_sec_remaining);
+        mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
+        mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
+
+        mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    mMinRemainingEditText.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mMinRemainingEditText.getWindowToken(), 0);
+                }
+
+                return false;
+            }
+        });
+
+        mSecRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    mSecRemainingEditText.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mSecRemainingEditText.getWindowToken(), 0);
+                }
+
+                return false;
+            }
+        });
 
         createTimer(mBrew.getBrewDurationMin());
 
@@ -218,8 +255,8 @@ public class HotBrewFragment extends Fragment
             {
                 mCountDownTimer.cancel();
                 mArcProgress.setProgress(mArcProgress.getMax());
-                mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,mArcProgress.getProgress() / 60)));
-                mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,mArcProgress.getProgress() % 60)));
+                mMinRemainingEditText.setText(Html.fromHtml(getString(R.string.minutes,mArcProgress.getProgress() / 60)));
+                mSecRemainingEditText.setText(Html.fromHtml(getString(R.string.seconds,mArcProgress.getProgress() % 60)));
                 mTimerPaused = false;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
@@ -269,8 +306,8 @@ public class HotBrewFragment extends Fragment
                 Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
 
                 secondsLeft = Math.round((float) msRemaining / 1000.0f);
-                mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,secondsLeft / 60)));
-                mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,secondsLeft % 60)));
+                mMinRemainingEditText.setText(Html.fromHtml(getString(R.string.minutes,secondsLeft / 60)));
+                mSecRemainingEditText.setText(Html.fromHtml(getString(R.string.seconds,secondsLeft % 60)));
                 mArcProgress.setProgress(secondsLeft);
                 mTimeRemaining = secondsLeft;
             }
@@ -286,7 +323,7 @@ public class HotBrewFragment extends Fragment
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             {
                 ObjectAnimator minAnimator = ObjectAnimator.ofArgb(
-                        mMinRemainingTextView,
+                        mMinRemainingEditText,
                         "textColor",
                         Color.WHITE,
                         Color.RED,
@@ -298,7 +335,7 @@ public class HotBrewFragment extends Fragment
                 minAnimator.start();
 
                 ObjectAnimator secAnimator = ObjectAnimator.ofArgb(
-                        mSecRemainingTextView,
+                        mSecRemainingEditText,
                         "textColor",
                         Color.WHITE,
                         Color.RED,
@@ -320,8 +357,8 @@ public class HotBrewFragment extends Fragment
         mArcProgress.setMax(durationInSeconds);
         mArcProgress.setProgress(durationInSeconds);
 
-        mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,durationInSeconds / 60)));
-        mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,durationInSeconds % 60)));
+        mMinRemainingEditText.setText(Html.fromHtml(getString(R.string.minutes,durationInSeconds / 60)));
+        mSecRemainingEditText.setText(Html.fromHtml(getString(R.string.seconds,durationInSeconds % 60)));
 
         mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
     }
