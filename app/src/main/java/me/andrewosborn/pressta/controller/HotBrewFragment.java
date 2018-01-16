@@ -30,7 +30,7 @@ import me.andrewosborn.pressta.model.Type;
 
 public class HotBrewFragment extends Fragment
 {
-    public static final int COUNTDOWN_INTERVAL = 500;
+    public static final int COUNTDOWN_INTERVAL = 150;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ArcProgress mArcProgress;
@@ -47,7 +47,7 @@ public class HotBrewFragment extends Fragment
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
-    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, 4.5f);
+    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, 0.1f);
 
     public static HotBrewFragment newInstance()
     {
@@ -260,16 +260,18 @@ public class HotBrewFragment extends Fragment
         {
             Log.i("CountDownTimer", "Tick at " + String.valueOf(msRemaining) + " ms");
 
+            Log.i("CountDownTimerBeforeIf", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
+
             // checks to see if UI update is necessary
             if (Math.round((float) msRemaining / 1000.0f) != secondsLeft)
             {
                 Log.i("CountDownTimer", "msRemaining/1000: " + String.valueOf(Math.round((float)msRemaining/1000.0f) + "; secondsLeft: " + secondsLeft));
 
                 secondsLeft = Math.round((float) msRemaining / 1000.0f);
-                mTimeRemaining = secondsLeft;
                 mMinRemainingTextView.setText(Html.fromHtml(getString(R.string.minutes,secondsLeft / 60)));
                 mSecRemainingTextView.setText(Html.fromHtml(getString(R.string.seconds,secondsLeft % 60)));
                 mArcProgress.setProgress(secondsLeft);
+                mTimeRemaining = secondsLeft;
             }
 
             Log.i("CountDownTimer", "Progress at " + mArcProgress.getProgress());
@@ -282,17 +284,29 @@ public class HotBrewFragment extends Fragment
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             {
-                ObjectAnimator animator = ObjectAnimator.ofArgb(
+                ObjectAnimator minAnimator = ObjectAnimator.ofArgb(
                         mMinRemainingTextView,
                         "textColor",
                         Color.WHITE,
                         Color.RED,
                         Color.WHITE);
-                animator.setDuration(1500);
-                animator.setEvaluator(new ArgbEvaluator());
-                animator.setRepeatMode(ValueAnimator.REVERSE);
-                animator.setRepeatCount(ValueAnimator.INFINITE);
-                animator.start();
+                minAnimator.setDuration(1500);
+                minAnimator.setEvaluator(new ArgbEvaluator());
+                minAnimator.setRepeatMode(ValueAnimator.REVERSE);
+                minAnimator.setRepeatCount(ValueAnimator.INFINITE);
+                minAnimator.start();
+
+                ObjectAnimator secAnimator = ObjectAnimator.ofArgb(
+                        mSecRemainingTextView,
+                        "textColor",
+                        Color.WHITE,
+                        Color.RED,
+                        Color.WHITE);
+                secAnimator.setDuration(1500);
+                secAnimator.setEvaluator(new ArgbEvaluator());
+                secAnimator.setRepeatMode(ValueAnimator.REVERSE);
+                secAnimator.setRepeatCount(ValueAnimator.INFINITE);
+                secAnimator.start();
             }
         }
     }
