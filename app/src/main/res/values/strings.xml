@@ -13,6 +13,7 @@
     <string name="text_view_label_coffee">COFFEE (g)</string>
     <string name="text_view_label_water">WATER (g)</string>
     <string name="ratio_label">RATIO</string>
+    <string name="ratio">%1$d:1</string>
     <string name="reset_timer">BREW</string>
     <string name="quick_brew_hot_label">HOT</string>
     <string name="quick_brew_cold_label">COLD</string>

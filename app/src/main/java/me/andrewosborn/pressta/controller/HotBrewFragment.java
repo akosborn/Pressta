@@ -152,13 +152,14 @@ public class HotBrewFragment extends Fragment
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
+                // check if triggered by user or code
                 if (b)
                 {
-                    mRatioTextView.setText(String.valueOf(i + 1));
+                    mRatioTextView.setText(getString(R.string.ratio, i + 1));
                     mBrew.setRatio(seekBar.getProgress() + 1);
                 }
                 else
-                    mRatioTextView.setText(String.valueOf(i));
+                    mRatioTextView.setText(getString(R.string.ratio, i));
 
                 calculate();
             }
