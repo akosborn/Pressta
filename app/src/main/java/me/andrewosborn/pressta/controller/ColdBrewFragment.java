@@ -28,7 +28,7 @@ public class ColdBrewFragment extends Fragment
 
 
 
-    private static final Brew mBrew = new Brew(Type.COLD, 23, 8, 720f);
+    private static final Brew mBrew = new Brew(Type.COLD, 23, 8, 720000);
 
     public static ColdBrewFragment newInstance()
     {
@@ -114,7 +114,7 @@ public class ColdBrewFragment extends Fragment
         });
 
         mColdBrewDurationEditText = (EditText) view.findViewById(R.id.edit_text_cold_brew_duration);
-        mColdBrewDurationEditText.setText(String.valueOf((int) mBrew.getBrewDurationMin() / 60));
+        mColdBrewDurationEditText.setText(String.valueOf((int) mBrew.getBrewDurationSeconds() / 60));
         mColdBrewDurationEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -128,8 +128,8 @@ public class ColdBrewFragment extends Fragment
             {
                 if (!charSequence.toString().equals(""))
                 {
-                    float hours = Integer.parseInt(charSequence.toString());
-                    mBrew.setBrewDurationMin(hours);
+                    int hours = Integer.parseInt(charSequence.toString());
+                    mBrew.setBrewDurationSeconds(hours);
                 }
             }
 

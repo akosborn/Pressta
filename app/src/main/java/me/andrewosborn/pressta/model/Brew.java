@@ -6,24 +6,15 @@ public class Brew
     private int coffeeWeight;
     private int waterWeight;
     private int ratio;
-    private float brewDurationMin;
+    private int brewDurationSeconds;
 
-    public Brew(Type type, int coffeeWeight, int ratio, float brewDurationMin)
+    public Brew(Type type, int coffeeWeight, int ratio, int brewDurationSeconds)
     {
         this.type = type;
         this.coffeeWeight = coffeeWeight;
         this.waterWeight = coffeeWeight * ratio;
         this.ratio = ratio;
-        this.brewDurationMin = brewDurationMin;
-    }
-
-    public Brew(Type type, int ratio, float brewDurationMin, int waterWeight)
-    {
-        this.type = type;
-        this.coffeeWeight = ratio / waterWeight;
-        this.waterWeight = waterWeight;
-        this.ratio = ratio;
-        this.brewDurationMin = brewDurationMin;
+        this.brewDurationSeconds = brewDurationSeconds;
     }
 
     public Type getType()
@@ -76,13 +67,13 @@ public class Brew
         return waterWeight/ratio;
     }
 
-    public float getBrewDurationMin()
+    public int getBrewDurationSeconds()
     {
-        return brewDurationMin;
+        return brewDurationSeconds;
     }
 
-    public void setBrewDurationMin(float brewDurationMin)
+    public void setBrewDurationSeconds(int brewDurationSeconds)
     {
-        this.brewDurationMin = brewDurationMin;
+        this.brewDurationSeconds = brewDurationSeconds;
     }
 }

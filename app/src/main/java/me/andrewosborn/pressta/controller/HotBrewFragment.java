@@ -19,7 +19,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -52,7 +51,7 @@ public class HotBrewFragment extends Fragment
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
-    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, 0.1f);
+    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, (int) (4.5f*60));
 
     public static HotBrewFragment newInstance()
     {
@@ -147,6 +146,8 @@ public class HotBrewFragment extends Fragment
         mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
         mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
 
+        createTimer(mBrew.getBrewDurationSeconds());
+
         mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -156,10 +157,41 @@ public class HotBrewFragment extends Fragment
                 {
                     mMinRemainingEditText.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mMinRemainingEditText.getWindowToken(), 0);
+                    if (imm != null)
+                        imm.hideSoftInputFromWindow(mMinRemainingEditText.getWindowToken(), 0);
                 }
 
                 return false;
+            }
+        });
+
+        mMinRemainingEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count)
+            {
+                // execute only if changed triggered by user and field not empty
+                if (getActivity().getCurrentFocus() == mMinRemainingEditText && !charSequence.toString().equals(""))
+                {
+                    mCountDownTimer.cancel();
+                    int minutes = Integer.parseInt(charSequence.toString());
+                    int seconds = Integer.parseInt(String.valueOf(mSecRemainingEditText.getText())) + (minutes * 60);
+                    mBrew.setBrewDurationSeconds(seconds);
+                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mTimerPaused = false;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+
             }
         });
 
@@ -172,14 +204,43 @@ public class HotBrewFragment extends Fragment
                 {
                     mSecRemainingEditText.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mSecRemainingEditText.getWindowToken(), 0);
+                    if (imm != null)
+                        imm.hideSoftInputFromWindow(mSecRemainingEditText.getWindowToken(), 0);
                 }
 
                 return false;
             }
         });
 
-        createTimer(mBrew.getBrewDurationMin());
+        mSecRemainingEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count)
+            {
+                // execute only if changed by user and field not empty
+                if (getActivity().getCurrentFocus() == mSecRemainingEditText && !charSequence.toString().equals(""))
+                {
+                    mCountDownTimer.cancel();
+                    int minutes = Integer.parseInt(String.valueOf(mMinRemainingEditText.getText()));
+                    int seconds = Integer.parseInt(charSequence.toString()) + (minutes * 60);
+                    mBrew.setBrewDurationSeconds(seconds);
+                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mTimerPaused = false;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+
+            }
+        });
 
         mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
 
@@ -223,6 +284,8 @@ public class HotBrewFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+                toggleEditTextInputType();
+
                 if (mTimerPaused)
                 {
                     long durationInMillis = (long) (mTimeRemaining * 1000);
@@ -241,6 +304,8 @@ public class HotBrewFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+                toggleEditTextInputType();
+
                 mTimerPaused = true;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
@@ -268,6 +333,30 @@ public class HotBrewFragment extends Fragment
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
 
         return view;
+    }
+
+    private void toggleEditTextInputType()
+    {
+        boolean isFocusable = !mMinRemainingEditText.isFocusable();
+        // if currently enabled
+        if (!isFocusable)
+        {
+            mMinRemainingEditText.setFocusable(false);
+            mSecRemainingEditText.setFocusable(false);
+        }
+        else
+        {
+            mMinRemainingEditText.setFocusableInTouchMode(true);
+            mSecRemainingEditText.setFocusableInTouchMode(true);
+        }
+    }
+
+    private void configureTimer(int seconds)
+    {
+        long milliseconds = seconds * 1000;
+        mCountDownTimer = new MyTimer(milliseconds, COUNTDOWN_INTERVAL);
+        mArcProgress.setMax(seconds);
+        mArcProgress.setProgress(seconds);
     }
 
     @Override
@@ -349,16 +438,17 @@ public class HotBrewFragment extends Fragment
         }
     }
 
-    private void createTimer(float minutes)
+    private void createTimer(int seconds)
     {
-        final int durationInSeconds = (int) (minutes * 60);
-        long durationInMillis = (long) (60 * minutes * 1000);
+        long durationInMillis = (long) (seconds * 1000);
 
-        mArcProgress.setMax(durationInSeconds);
-        mArcProgress.setProgress(durationInSeconds);
+        mArcProgress.setMax(seconds);
+        mArcProgress.setProgress(seconds);
 
-        mMinRemainingEditText.setText(Html.fromHtml(getString(R.string.minutes,durationInSeconds / 60)));
-        mSecRemainingEditText.setText(Html.fromHtml(getString(R.string.seconds,durationInSeconds % 60)));
+        mMinRemainingEditText.setText(
+                Html.fromHtml(getString(R.string.minutes,seconds / 60)));
+        mSecRemainingEditText.setText(
+                Html.fromHtml(getString(R.string.seconds,seconds % 60)));
 
         mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
     }
