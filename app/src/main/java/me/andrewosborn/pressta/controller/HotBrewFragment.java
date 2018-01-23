@@ -1,5 +1,7 @@
 package me.andrewosborn.pressta.controller;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -28,6 +30,9 @@ import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
@@ -47,6 +52,8 @@ public class HotBrewFragment extends Fragment
     private ImageButton mStartTimerButton;
     private ImageButton mPauseTimerButton;
     private ImageButton mResetTimerButton;
+
+    private AnimatorSet animatorSet;
 
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
@@ -325,6 +332,7 @@ public class HotBrewFragment extends Fragment
                 mTimerPaused = false;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
+                animatorSet.cancel();
             }
         });
 
@@ -411,6 +419,9 @@ public class HotBrewFragment extends Fragment
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             {
+                List<Animator> objectAnimators = new ArrayList<>();
+                animatorSet = new AnimatorSet();
+
                 ObjectAnimator minAnimator = ObjectAnimator.ofArgb(
                         mMinRemainingEditText,
                         "textColor",
@@ -421,7 +432,7 @@ public class HotBrewFragment extends Fragment
                 minAnimator.setEvaluator(new ArgbEvaluator());
                 minAnimator.setRepeatMode(ValueAnimator.REVERSE);
                 minAnimator.setRepeatCount(ValueAnimator.INFINITE);
-                minAnimator.start();
+                objectAnimators.add(minAnimator);
 
                 ObjectAnimator secAnimator = ObjectAnimator.ofArgb(
                         mSecRemainingEditText,
@@ -433,8 +444,13 @@ public class HotBrewFragment extends Fragment
                 secAnimator.setEvaluator(new ArgbEvaluator());
                 secAnimator.setRepeatMode(ValueAnimator.REVERSE);
                 secAnimator.setRepeatCount(ValueAnimator.INFINITE);
-                secAnimator.start();
+                objectAnimators.add(secAnimator);
+
+                animatorSet.playTogether(objectAnimators);
+                animatorSet.start();
             }
+
+            toggleEditTextInputType();
         }
     }
 
