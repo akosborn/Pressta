@@ -333,6 +333,8 @@ public class HotBrewFragment extends Fragment
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
                 animatorSet.cancel();
+                mMinRemainingEditText.setTextColor(Color.WHITE);
+                mSecRemainingEditText.setTextColor(Color.WHITE);
             }
         });
 
@@ -450,7 +452,8 @@ public class HotBrewFragment extends Fragment
                 animatorSet.start();
             }
 
-            toggleEditTextInputType();
+            mPauseTimerButton.setVisibility(View.GONE);
+            mStartTimerButton.setVisibility(View.GONE);
         }
     }
 
