@@ -198,6 +198,8 @@ public class ColdBrewFragment extends Fragment
                     int minutes = Integer.parseInt(mMinRemainingEditText.getText().toString());
                     int seconds = (minutes * 60) + (hours * 3600);
                     mBrew.setBrewDurationSeconds(seconds);
+                    mBrew.setFinishDate(new Date(System.currentTimeMillis() +
+                            (mBrew.getBrewDurationSeconds() * 1000)));
                     configureTimer(mBrew.getBrewDurationSeconds());
                     mTimerPaused = false;
                 }
@@ -246,6 +248,8 @@ public class ColdBrewFragment extends Fragment
                     int minutes = Integer.parseInt(charSequence.toString());
                     int seconds = (hours * 3600) + (minutes * 60);
                     mBrew.setBrewDurationSeconds(seconds);
+                    mBrew.setFinishDate(new Date(System.currentTimeMillis() +
+                            (mBrew.getBrewDurationSeconds() * 1000)));
                     configureTimer(mBrew.getBrewDurationSeconds());
                     mTimerPaused = false;
                 }
@@ -377,6 +381,7 @@ public class ColdBrewFragment extends Fragment
         mCountDownTimer = new MyTimer(milliseconds, COUNTDOWN_INTERVAL);
         mArcProgress.setMax(seconds);
         mArcProgress.setProgress(seconds);
+        mArcProgress.setBottomText(mDateFormat.format(mBrew.getFinishDate()));
     }
 
     @Override
