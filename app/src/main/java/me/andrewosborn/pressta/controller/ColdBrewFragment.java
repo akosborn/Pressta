@@ -42,7 +42,7 @@ import me.andrewosborn.pressta.model.Type;
 
 public class ColdBrewFragment extends Fragment
 {
-    public static final int COUNTDOWN_INTERVAL = 1000;
+    public static final int COUNTDOWN_INTERVAL = 250;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ArcProgress mArcProgress;
