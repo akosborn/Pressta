@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import me.andrewosborn.pressta.R;
@@ -58,7 +59,9 @@ public class HotBrewFragment extends Fragment
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
-    private static final Brew mBrew = new Brew(Type.HOT, 23, 16, (int) (4.5f*60));
+    private static final Brew mBrew = new Brew(Type.HOT, 20, 16,
+            (int) 4.5*60,
+            new Date(System.currentTimeMillis() + ((long) 4.5 * 60 * 3600 * 1000)));
 
     public static HotBrewFragment newInstance()
     {

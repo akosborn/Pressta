@@ -1,5 +1,7 @@
 package me.andrewosborn.pressta.model;
 
+import java.util.Date;
+
 public class Brew
 {
     private Type type;
@@ -7,14 +9,16 @@ public class Brew
     private int waterWeight;
     private int ratio;
     private int brewDurationSeconds;
+    private Date finishDate;
 
-    public Brew(Type type, int coffeeWeight, int ratio, int brewDurationSeconds)
+    public Brew(Type type, int coffeeWeight, int ratio, int brewDurationSeconds, Date finishDate)
     {
         this.type = type;
         this.coffeeWeight = coffeeWeight;
         this.waterWeight = coffeeWeight * ratio;
         this.ratio = ratio;
         this.brewDurationSeconds = brewDurationSeconds;
+        this.finishDate = finishDate;
     }
 
     public Type getType()
@@ -75,5 +79,15 @@ public class Brew
     public void setBrewDurationSeconds(int brewDurationSeconds)
     {
         this.brewDurationSeconds = brewDurationSeconds;
+    }
+
+    public Date getFinishDate()
+    {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finishDate)
+    {
+        this.finishDate = finishDate;
     }
 }
