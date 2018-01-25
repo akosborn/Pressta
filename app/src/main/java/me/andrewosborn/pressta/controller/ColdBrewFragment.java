@@ -336,12 +336,13 @@ public class ColdBrewFragment extends Fragment
             {
                 mCountDownTimer.cancel();
                 mArcProgress.setProgress(mArcProgress.getMax());
-                mHoursRemainingEditText.setText(Html.fromHtml(getString(R.string.minutes,mArcProgress.getProgress() / 60)));
-                mMinRemainingEditText.setText(Html.fromHtml(getString(R.string.seconds,mArcProgress.getProgress() % 60)));
+                mHoursRemainingEditText.setText(getString(R.string.hours,mArcProgress.getProgress() / 3600));
+                mMinRemainingEditText.setText(getString(R.string.minutes,(mArcProgress.getProgress() % 60)/60));
                 mTimerPaused = false;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
-                animatorSet.cancel();
+                if (animatorSet != null)
+                    animatorSet.cancel();
                 mHoursRemainingEditText.setTextColor(Color.WHITE);
                 mMinRemainingEditText.setTextColor(Color.WHITE);
             }
