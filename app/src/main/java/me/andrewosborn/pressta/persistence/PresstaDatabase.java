@@ -3,14 +3,12 @@ package me.andrewosborn.pressta.persistence;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import me.andrewosborn.pressta.model.Brew;
 
 
 @Database(entities = {Brew.class}, version = 1)
-@TypeConverters({DateConverter.class})
 public abstract class PresstaDatabase extends RoomDatabase
 {
     private static PresstaDatabase INSTANCE;

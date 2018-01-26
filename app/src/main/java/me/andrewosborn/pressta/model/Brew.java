@@ -3,12 +3,13 @@ package me.andrewosborn.pressta.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.Date;
-import java.util.UUID;
+
+import me.andrewosborn.pressta.persistence.BrewTypeConverter;
+import me.andrewosborn.pressta.persistence.DateConverter;
 
 @Entity
 public class Brew
@@ -20,6 +21,7 @@ public class Brew
     private String title;
 
     @ColumnInfo(name = "type")
+    @TypeConverters({BrewTypeConverter.class})
     private Type type;
 
     @ColumnInfo(name = "coffee_weight")
@@ -35,11 +37,10 @@ public class Brew
     private int brewDuration;
 
     @ColumnInfo(name = "completion_date")
+    @TypeConverters({DateConverter.class})
     private Date completionDate;
 
-    public Brew()
-    {
-    }
+    public Brew() {}
 
     public Brew(Type type, int coffeeWeight, int ratio, int brewDuration, Date completionDate)
     {

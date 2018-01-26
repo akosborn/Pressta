@@ -1,7 +1,6 @@
 package me.andrewosborn.pressta.persistence;
 
 import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
 
 import java.util.Date;
 
