@@ -1,24 +1,73 @@
 package me.andrewosborn.pressta.model;
 
-import java.util.Date;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
+import java.util.Date;
+import java.util.UUID;
+
+@Entity
 public class Brew
 {
-    private Type type;
-    private int coffeeWeight;
-    private int waterWeight;
-    private int ratio;
-    private int brewDurationSeconds;
-    private Date finishDate;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
-    public Brew(Type type, int coffeeWeight, int ratio, int brewDurationSeconds, Date finishDate)
+    @ColumnInfo(name = "title")
+    private String title;
+
+    @Ignore
+    private Type type;
+
+    @ColumnInfo(name = "coffee_weight")
+    private int coffeeWeight;
+
+    @ColumnInfo(name = "water_weight")
+    private int waterWeight;
+
+    @ColumnInfo(name = "ratio")
+    private int ratio;
+
+    @ColumnInfo(name = "brew_duration")
+    private int brewDuration;
+
+    @Ignore
+    private Date completionDate;
+
+    public Brew()
+    {
+    }
+
+    public Brew(Type type, int coffeeWeight, int ratio, int brewDuration, Date completionDate)
     {
         this.type = type;
         this.coffeeWeight = coffeeWeight;
         this.waterWeight = coffeeWeight * ratio;
         this.ratio = ratio;
-        this.brewDurationSeconds = brewDurationSeconds;
-        this.finishDate = finishDate;
+        this.brewDuration = brewDuration;
+        this.completionDate = completionDate;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
     public Type getType()
@@ -71,23 +120,23 @@ public class Brew
         return waterWeight/ratio;
     }
 
-    public int getBrewDurationSeconds()
+    public int getBrewDuration()
     {
-        return brewDurationSeconds;
+        return brewDuration;
     }
 
-    public void setBrewDurationSeconds(int brewDurationSeconds)
+    public void setBrewDuration(int brewDuration)
     {
-        this.brewDurationSeconds = brewDurationSeconds;
+        this.brewDuration = brewDuration;
     }
 
-    public Date getFinishDate()
+    public Date getCompletionDate()
     {
-        return finishDate;
+        return completionDate;
     }
 
-    public void setFinishDate(Date finishDate)
+    public void setCompletionDate(Date completionDate)
     {
-        this.finishDate = finishDate;
+        this.completionDate = completionDate;
     }
 }

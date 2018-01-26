@@ -156,7 +156,7 @@ public class ColdBrewFragment extends Fragment
         mHoursRemainingEditText = (EditText) view.findViewById(R.id.text_view_hr_remaining);
         mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
 
-        createTimer(mBrew.getBrewDurationSeconds());
+        createTimer(mBrew.getBrewDuration());
 
         mHoursRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -193,10 +193,10 @@ public class ColdBrewFragment extends Fragment
                     int hours = Integer.parseInt(charSequence.toString());
                     int minutes = Integer.parseInt(mMinRemainingEditText.getText().toString());
                     int seconds = (minutes * 60) + (hours * 3600);
-                    mBrew.setBrewDurationSeconds(seconds);
-                    mBrew.setFinishDate(new Date(System.currentTimeMillis() +
-                            (mBrew.getBrewDurationSeconds() * 1000)));
-                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mBrew.setBrewDuration(seconds);
+                    mBrew.setCompletionDate(new Date(System.currentTimeMillis() +
+                            (mBrew.getBrewDuration() * 1000)));
+                    configureTimer(mBrew.getBrewDuration());
                     mTimerPaused = false;
                 }
             }
@@ -243,10 +243,10 @@ public class ColdBrewFragment extends Fragment
                     int hours = Integer.parseInt(String.valueOf(mHoursRemainingEditText.getText()));
                     int minutes = Integer.parseInt(charSequence.toString());
                     int seconds = (hours * 3600) + (minutes * 60);
-                    mBrew.setBrewDurationSeconds(seconds);
-                    mBrew.setFinishDate(new Date(System.currentTimeMillis() +
-                            (mBrew.getBrewDurationSeconds() * 1000)));
-                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mBrew.setBrewDuration(seconds);
+                    mBrew.setCompletionDate(new Date(System.currentTimeMillis() +
+                            (mBrew.getBrewDuration() * 1000)));
+                    configureTimer(mBrew.getBrewDuration());
                     mTimerPaused = false;
                 }
             }
@@ -377,7 +377,7 @@ public class ColdBrewFragment extends Fragment
         mCountDownTimer = new MyTimer(milliseconds, COUNTDOWN_INTERVAL);
         mArcProgress.setMax(seconds);
         mArcProgress.setProgress(seconds);
-        mArcProgress.setBottomText(mDateFormat.format(mBrew.getFinishDate()));
+        mArcProgress.setBottomText(mDateFormat.format(mBrew.getCompletionDate()));
     }
 
     @Override
@@ -474,7 +474,7 @@ public class ColdBrewFragment extends Fragment
 
         mArcProgress.setMax(seconds);
         mArcProgress.setProgress(seconds);
-        mArcProgress.setBottomText(mDateFormat.format(mBrew.getFinishDate()));
+        mArcProgress.setBottomText(mDateFormat.format(mBrew.getCompletionDate()));
 
         mHoursRemainingEditText.setText(getString(R.string.hours,seconds / 3600));
         mMinRemainingEditText.setText(getString(R.string.minutes,(seconds % 3600) / 60));

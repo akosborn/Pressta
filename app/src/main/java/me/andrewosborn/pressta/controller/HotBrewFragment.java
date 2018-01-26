@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -50,6 +51,7 @@ public class HotBrewFragment extends Fragment
     private ImageButton mStartTimerButton;
     private ImageButton mPauseTimerButton;
     private ImageButton mResetTimerButton;
+    private Button mSaveButton;
 
     private AnimatorSet animatorSet;
 
@@ -152,7 +154,7 @@ public class HotBrewFragment extends Fragment
         mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
         mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
 
-        createTimer(mBrew.getBrewDurationSeconds());
+        createTimer(mBrew.getBrewDuration());
 
         mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -188,8 +190,8 @@ public class HotBrewFragment extends Fragment
                     mCountDownTimer.cancel();
                     int minutes = Integer.parseInt(charSequence.toString());
                     int seconds = Integer.parseInt(String.valueOf(mSecRemainingEditText.getText())) + (minutes * 60);
-                    mBrew.setBrewDurationSeconds(seconds);
-                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mBrew.setBrewDuration(seconds);
+                    configureTimer(mBrew.getBrewDuration());
                     mTimerPaused = false;
                 }
             }
@@ -235,8 +237,8 @@ public class HotBrewFragment extends Fragment
                     mCountDownTimer.cancel();
                     int minutes = Integer.parseInt(String.valueOf(mMinRemainingEditText.getText()));
                     int seconds = Integer.parseInt(charSequence.toString()) + (minutes * 60);
-                    mBrew.setBrewDurationSeconds(seconds);
-                    configureTimer(mBrew.getBrewDurationSeconds());
+                    mBrew.setBrewDuration(seconds);
+                    configureTimer(mBrew.getBrewDuration());
                     mTimerPaused = false;
                 }
             }
@@ -284,6 +286,7 @@ public class HotBrewFragment extends Fragment
         mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
         mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
         mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
+        mSaveButton = (Button) view.findViewById(R.id.button_save);
 
         mStartTimerButton.setOnClickListener(new View.OnClickListener()
         {

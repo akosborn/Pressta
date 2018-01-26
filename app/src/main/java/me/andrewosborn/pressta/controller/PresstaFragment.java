@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,6 @@ import me.andrewosborn.pressta.model.Type;
 
 public class PresstaFragment extends Fragment
 {
-    private static final String EXTRA_BREW_TYPE = "me.andrewosborn.extra.brew_type";
-
     private RelativeLayout mQuickBrewRelativeLayout;
     private TextView mQuickColdBrewTextView;
     private TextView mQuickHotBrewTextView;
