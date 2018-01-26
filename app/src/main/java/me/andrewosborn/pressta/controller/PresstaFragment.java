@@ -12,8 +12,19 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import me.andrewosborn.pressta.R;
+import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
+import me.andrewosborn.pressta.persistence.PresstaDatabase;
 
 
 public class PresstaFragment extends Fragment

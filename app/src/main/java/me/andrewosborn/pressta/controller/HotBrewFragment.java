@@ -30,12 +30,19 @@ import android.widget.TextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
+import me.andrewosborn.pressta.persistence.PresstaDatabase;
 
 public class HotBrewFragment extends Fragment
 {
@@ -58,6 +65,7 @@ public class HotBrewFragment extends Fragment
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
+    private PresstaDatabase mDatabase;
     private static final Brew mBrew = new Brew(Type.HOT, 20, 16,
             (int) 4.5*60,
             new Date(System.currentTimeMillis() + ((long) 4.5 * 60 * 3600 * 1000)));
@@ -344,6 +352,15 @@ public class HotBrewFragment extends Fragment
         mRatioSeekbar.setProgress(mBrew.getRatio());
         mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
+
+        mSaveButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
 
         return view;
     }
