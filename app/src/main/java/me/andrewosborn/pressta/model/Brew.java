@@ -5,6 +5,7 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
 
 import java.util.Date;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class Brew
     @ColumnInfo(name = "title")
     private String title;
 
-    @Ignore
+    @ColumnInfo(name = "type")
     private Type type;
 
     @ColumnInfo(name = "coffee_weight")
@@ -33,7 +34,7 @@ public class Brew
     @ColumnInfo(name = "brew_duration")
     private int brewDuration;
 
-    @Ignore
+    @ColumnInfo(name = "completion_date")
     private Date completionDate;
 
     public Brew()
