@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -41,7 +40,6 @@ import javax.inject.Inject;
 import me.andrewosborn.pressta.PresstaApplication;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
-import me.andrewosborn.pressta.model.Type;
 import me.andrewosborn.pressta.viewmodel.BrewViewModel;
 
 public class HotBrewFragment extends Fragment
@@ -124,14 +122,34 @@ public class HotBrewFragment extends Fragment
         // Inflate and get reference to calculation fragment view
         View view = inflater.inflate(R.layout.fragment_hot_brew, container, false);
 
+        assignViews(view);
+        setListeners();
+
+        return view;
+    }
+
+    private void assignViews(View view)
+    {
         mCoffeeWeightField = (EditText) view.findViewById(R.id.edit_text_coffee_weight);
+        mWaterWeightField = (EditText) view.findViewById(R.id.edit_text_water_weight);
+        mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
+        mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
+        mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
+        mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
+        mRatioSeekbar = (AppCompatSeekBar) view.findViewById(R.id.seekbar_ratio);
+        mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
+        mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
+        mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
+        mSaveButton = (Button) view.findViewById(R.id.button_save);
+    }
+
+    private void setListeners()
+    {
         mCoffeeWeightField.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
@@ -155,19 +173,14 @@ public class HotBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
-        mWaterWeightField = (EditText) view.findViewById(R.id.edit_text_water_weight);
         mWaterWeightField.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
@@ -191,14 +204,8 @@ public class HotBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
-
-        mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
-        mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
-        mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
 
         mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -221,9 +228,7 @@ public class HotBrewFragment extends Fragment
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count)
@@ -242,9 +247,7 @@ public class HotBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
         mSecRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -268,9 +271,7 @@ public class HotBrewFragment extends Fragment
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count)
@@ -289,14 +290,9 @@ public class HotBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
-        mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
-
-        mRatioSeekbar = (AppCompatSeekBar) view.findViewById(R.id.seekbar_ratio);
         mRatioSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
@@ -316,21 +312,12 @@ public class HotBrewFragment extends Fragment
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            {}
         });
-
-        mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
-        mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
-        mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
-        mSaveButton = (Button) view.findViewById(R.id.button_save);
 
         mStartTimerButton.setOnClickListener(new View.OnClickListener()
         {
@@ -389,12 +376,8 @@ public class HotBrewFragment extends Fragment
         {
             @Override
             public void onClick(View view)
-            {
-
-            }
+            {}
         });
-
-        return view;
     }
 
     private void setupUI()
