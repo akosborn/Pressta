@@ -27,4 +27,7 @@ public interface BrewDao
 
     @Delete
     void delete(Brew brew);
+
+    @Insert
+    void insert(Brew brew);
 }

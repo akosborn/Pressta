@@ -5,6 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,22 +33,21 @@ import android.widget.TextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import javax.inject.Inject;
+
+import me.andrewosborn.pressta.PresstaApplication;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
-import me.andrewosborn.pressta.persistence.PresstaDatabase;
+import me.andrewosborn.pressta.viewmodel.BrewViewModel;
 
 public class HotBrewFragment extends Fragment
 {
+    private static final String TAG = "HotBrewFragment";
+
     public static final int COUNTDOWN_INTERVAL = 150;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
@@ -65,14 +67,50 @@ public class HotBrewFragment extends Fragment
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
-    private PresstaDatabase mDatabase;
-    private static final Brew mBrew = new Brew(Type.HOT, 20, 16,
-            (int) 4.5*60,
-            new Date(System.currentTimeMillis() + ((long) 4.5 * 60 * 3600 * 1000)));
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    private BrewViewModel mBrewViewModel;
+
+    private Brew mBrew;
 
     public static HotBrewFragment newInstance()
     {
         return new HotBrewFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        ((PresstaApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+
+        mBrewViewModel = ViewModelProviders.of(getActivity(), viewModelFactory)
+                .get(BrewViewModel.class);
+        mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
+        {
+            @Override
+            public void onChanged(@Nullable Brew brew)
+            {
+                if (HotBrewFragment.this.mBrew == null)
+                {
+                    Log.i(TAG, "mBrewViewModel onChanged() called");
+                    HotBrewFragment.this.mBrew = brew;
+                    //ToDo: Setup/update UI
+                    if (mBrew != null)
+                        setupUI();
+                }
+            }
+        });
     }
 
     @Nullable
@@ -161,8 +199,6 @@ public class HotBrewFragment extends Fragment
         mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
         mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
         mSecRemainingEditText = (EditText) view.findViewById(R.id.text_view_sec_remaining);
-
-        createTimer(mBrew.getBrewDuration());
 
         mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -349,10 +385,6 @@ public class HotBrewFragment extends Fragment
             }
         });
 
-        mRatioSeekbar.setProgress(mBrew.getRatio());
-        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
-        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
-
         mSaveButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -363,6 +395,14 @@ public class HotBrewFragment extends Fragment
         });
 
         return view;
+    }
+
+    private void setupUI()
+    {
+        mRatioSeekbar.setProgress(mBrew.getRatio());
+        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
+        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
+        createTimer(mBrew.getBrewDuration());
     }
 
     private void toggleEditTextInputType()

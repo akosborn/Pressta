@@ -42,4 +42,9 @@ public class BrewRepository
     {
         brewDao.delete(brew);
     }
+
+    public void add(Brew brew)
+    {
+        brewDao.insert(brew);
+    }
 }

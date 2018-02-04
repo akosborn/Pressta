@@ -1,12 +1,14 @@
 package me.andrewosborn.pressta.model;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import me.andrewosborn.pressta.persistence.BrewTypeConverter;
 import me.andrewosborn.pressta.persistence.DateConverter;
@@ -14,6 +16,9 @@ import me.andrewosborn.pressta.persistence.DateConverter;
 @Entity
 public class Brew
 {
+    public static final int DEFAULT_HOT_BREW_ID = 1;
+    public static final int DEFAULT_COLD_BREW_ID = 2;
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -42,6 +47,7 @@ public class Brew
 
     public Brew() {}
 
+    @Ignore
     public Brew(Type type, int coffeeWeight, int ratio, int brewDuration, Date completionDate)
     {
         this.type = type;
@@ -140,5 +146,19 @@ public class Brew
     public void setCompletionDate(Date completionDate)
     {
         this.completionDate = completionDate;
+    }
+
+    public static List<Brew> getDefaults()
+    {
+        List<Brew> defaultBrews = new ArrayList<>();
+
+        Brew defaultHotBrew = new Brew(Type.HOT, 20, 16, (int) 4.5*60,
+                new Date(System.currentTimeMillis() + ((long) 4.5 * 60 * 3600 * 1000)));
+        Brew defaultColdBrew = new Brew(Type.COLD, 20, 8, (12 * 3600),
+                new Date(System.currentTimeMillis() + (12 * 3600 * 1000)));
+        defaultBrews.add(defaultHotBrew);
+        defaultBrews.add(defaultColdBrew);
+
+        return defaultBrews;
     }
 }

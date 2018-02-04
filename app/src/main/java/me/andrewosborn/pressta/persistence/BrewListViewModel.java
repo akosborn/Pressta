@@ -20,7 +20,7 @@ public class BrewListViewModel extends AndroidViewModel
     {
         super(application);
 
-        database = PresstaDatabase.getPresstaDatabase(this.getApplication());
+        database = PresstaDatabase.getInstance(this.getApplication());
 
         brewList = database.brewDao().findAll();
     }
