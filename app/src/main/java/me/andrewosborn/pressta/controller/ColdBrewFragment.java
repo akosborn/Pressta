@@ -5,6 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -34,12 +37,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import me.andrewosborn.pressta.PresstaApplication;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
-import me.andrewosborn.pressta.model.Type;
+import me.andrewosborn.pressta.viewmodel.BrewViewModel;
 
 public class ColdBrewFragment extends Fragment
 {
+    private static final String TAG = "ColdBrewFragment";
+
     public static final int COUNTDOWN_INTERVAL = 250;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
@@ -54,19 +62,55 @@ public class ColdBrewFragment extends Fragment
     private ImageButton mResetTimerButton;
 
     private AnimatorSet animatorSet;
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM d, h:mm a", Locale.US);
+    private static final SimpleDateFormat mDateFormat =
+            new SimpleDateFormat("MMM d, h:mm a", Locale.US);
 
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
-    private static final Brew mBrew = new Brew(
-            Type.COLD, 20, 8,
-            (12 * 3600),
-            new Date(System.currentTimeMillis() + (12 * 3600 * 1000)));
+    @Inject
+    ViewModelProvider.Factory mViewModelFactory;
+
+    private BrewViewModel mBrewViewModel;
+
+    private Brew mBrew;
 
     public static ColdBrewFragment newInstance()
     {
         return new ColdBrewFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        ((PresstaApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+
+        mBrewViewModel = ViewModelProviders.of(this, mViewModelFactory)
+                .get(BrewViewModel.class);
+        mBrewViewModel.getBrew(Brew.DEFAULT_COLD_BREW_ID).observe(this, new Observer<Brew>()
+        {
+            @Override
+            public void onChanged(@Nullable Brew brew)
+            {
+                if (mBrew == null)
+                {
+                    Log.i(TAG, "mBrewViewModel onChanged() called");
+                    mBrew = brew;
+                    if (mBrew != null)
+                        setupUI();
+                }
+            }
+        });
     }
 
     @Nullable
@@ -80,14 +124,41 @@ public class ColdBrewFragment extends Fragment
         // Inflate and get reference to calculation fragment view
         View view = inflater.inflate(R.layout.fragment_cold_brew, container, false);
 
+        assignViews(view);
+        setListeners();
+
+        return view;
+    }
+
+    private void setupUI()
+    {
+        mRatioSeekbar.setProgress(mBrew.getRatio());
+        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
+        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
+        createTimer(mBrew.getBrewDuration());
+    }
+
+    private void assignViews(View view)
+    {
         mCoffeeWeightField = (EditText) view.findViewById(R.id.edit_text_coffee_weight);
+        mWaterWeightField = (EditText) view.findViewById(R.id.edit_text_water_weight);
+        mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
+        mHoursRemainingEditText = (EditText) view.findViewById(R.id.text_view_hr_remaining);
+        mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
+        mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
+        mRatioSeekbar = (AppCompatSeekBar) view.findViewById(R.id.seekbar_ratio);
+        mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
+        mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
+        mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
+    }
+
+    private void setListeners()
+    {
         mCoffeeWeightField.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
@@ -111,19 +182,14 @@ public class ColdBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
-        mWaterWeightField = (EditText) view.findViewById(R.id.edit_text_water_weight);
         mWaterWeightField.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
@@ -147,16 +213,25 @@ public class ColdBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
-        mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
-        mHoursRemainingEditText = (EditText) view.findViewById(R.id.text_view_hr_remaining);
-        mMinRemainingEditText = (EditText) view.findViewById(R.id.text_view_min_remaining);
+        mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    mMinRemainingEditText.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null)
+                        imm.hideSoftInputFromWindow(mMinRemainingEditText.getWindowToken(), 0);
+                }
 
-        createTimer(mBrew.getBrewDuration());
+                return false;
+            }
+        });
 
         mHoursRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -179,9 +254,7 @@ public class ColdBrewFragment extends Fragment
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count)
@@ -203,35 +276,14 @@ public class ColdBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
-        });
-
-        mMinRemainingEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
-            {
-                if (actionId == EditorInfo.IME_ACTION_DONE)
-                {
-                    mMinRemainingEditText.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null)
-                        imm.hideSoftInputFromWindow(mMinRemainingEditText.getWindowToken(), 0);
-                }
-
-                return false;
-            }
+            {}
         });
 
         mMinRemainingEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count)
-            {
-
-            }
+            {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count)
@@ -253,14 +305,9 @@ public class ColdBrewFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable)
-            {
-
-            }
+            {}
         });
 
-        mRatioTextView = (TextView) view.findViewById(R.id.text_view_seekbar_label);
-
-        mRatioSeekbar = (AppCompatSeekBar) view.findViewById(R.id.seekbar_ratio);
         mRatioSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
@@ -280,20 +327,12 @@ public class ColdBrewFragment extends Fragment
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            {}
         });
-
-        mStartTimerButton = (ImageButton) view.findViewById(R.id.button_start);
-        mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
-        mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
 
         mStartTimerButton.setOnClickListener(new View.OnClickListener()
         {
@@ -347,12 +386,6 @@ public class ColdBrewFragment extends Fragment
                 mMinRemainingEditText.setTextColor(Color.WHITE);
             }
         });
-
-        mRatioSeekbar.setProgress(mBrew.getRatio());
-        mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
-        mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
-
-        return view;
     }
 
     private void toggleEditTextInputType()

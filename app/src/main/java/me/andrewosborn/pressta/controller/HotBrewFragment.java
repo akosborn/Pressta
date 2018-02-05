@@ -66,7 +66,7 @@ public class HotBrewFragment extends Fragment
     private boolean mTimerPaused = false;
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    ViewModelProvider.Factory mViewModelFactory;
 
     private BrewViewModel mBrewViewModel;
 
@@ -92,18 +92,17 @@ public class HotBrewFragment extends Fragment
     {
         super.onActivityCreated(savedInstanceState);
 
-        mBrewViewModel = ViewModelProviders.of(this, viewModelFactory)
+        mBrewViewModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(BrewViewModel.class);
         mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
         {
             @Override
             public void onChanged(@Nullable Brew brew)
             {
-                if (HotBrewFragment.this.mBrew == null)
+                if (mBrew == null)
                 {
                     Log.i(TAG, "mBrewViewModel onChanged() called");
                     HotBrewFragment.this.mBrew = brew;
-                    //ToDo: Setup/update UI
                     if (mBrew != null)
                         setupUI();
                 }
