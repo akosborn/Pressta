@@ -92,7 +92,7 @@ public class HotBrewFragment extends Fragment
     {
         super.onActivityCreated(savedInstanceState);
 
-        mBrewViewModel = ViewModelProviders.of(getActivity(), viewModelFactory)
+        mBrewViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(BrewViewModel.class);
         mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
         {
