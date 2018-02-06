@@ -103,14 +103,14 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rel_layout_my_brews"
                 android:layout_height="0dp"
                 android:layout_width="0dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginTop="2dp"
                 android:background="@color/light_blue"
                 app:layout_columnWeight="50"
-                app:layout_rowWeight="50"
->
+                app:layout_rowWeight="50">
 
                 <ImageView
                     android:id="@+id/img_view_my_brews"

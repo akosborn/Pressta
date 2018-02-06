@@ -30,8 +30,11 @@ import me.andrewosborn.pressta.persistence.PresstaDatabase;
 public class PresstaFragment extends Fragment
 {
     private RelativeLayout mQuickBrewRelativeLayout;
+    private RelativeLayout mMyBrewsRelativeLayout;
     private TextView mQuickColdBrewTextView;
     private TextView mQuickHotBrewTextView;
+
+    private Intent mIntent;
 
     private Type mBrewType = Type.HOT;
 
@@ -56,14 +59,13 @@ public class PresstaFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                Intent intent = null;
 
                 if (mBrewType.equals(Type.HOT))
-                    intent = new Intent(getActivity(), HotBrewActivity.class);
+                    mIntent = new Intent(getActivity(), HotBrewActivity.class);
                 else if (mBrewType.equals(Type.COLD))
-                    intent = new Intent(getActivity(), ColdBrewActivity.class);
+                    mIntent = new Intent(getActivity(), ColdBrewActivity.class);
 
-                startActivity(intent);
+                startActivity(mIntent);
             }
         });
 
@@ -89,6 +91,17 @@ public class PresstaFragment extends Fragment
                 mBrewType = Type.COLD;
                 mQuickHotBrewTextView.setBackgroundColor(Color.TRANSPARENT);
                 mQuickColdBrewTextView.setBackgroundColor(getResources().getColor(R.color.opaque_black));
+            }
+        });
+
+        mMyBrewsRelativeLayout = (RelativeLayout) view.findViewById(R.id.rel_layout_my_brews);
+        mMyBrewsRelativeLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mIntent = new Intent(getActivity(), MyBrewsActivity.class);
+                startActivity(mIntent);
             }
         });
 
