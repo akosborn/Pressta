@@ -302,7 +302,7 @@
                 app:layout_constraintLeft_toRightOf="@id/button_edit"
                 app:layout_constraintRight_toRightOf="parent"
                 android:visibility="gone"/>
-            
+
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>

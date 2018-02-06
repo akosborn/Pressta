@@ -59,6 +59,7 @@ public class HotBrewFragment extends Fragment
     private ImageButton mPauseTimerButton;
     private ImageButton mResetTimerButton;
     private Button mSaveButton;
+    private Button mEditButton;
 
     private AnimatorSet animatorSet;
 
@@ -140,6 +141,7 @@ public class HotBrewFragment extends Fragment
         mPauseTimerButton = (ImageButton) view.findViewById(R.id.button_pause);
         mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
         mSaveButton = (Button) view.findViewById(R.id.button_save);
+        mEditButton = (Button) view.findViewById(R.id.button_edit);
     }
 
     private void setListeners()
@@ -372,6 +374,13 @@ public class HotBrewFragment extends Fragment
         });
 
         mSaveButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {}
+        });
+
+        mEditButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
