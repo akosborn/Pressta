@@ -361,8 +361,10 @@ public class HotBrewFragment extends Fragment
             {
                 mCountDownTimer.cancel();
                 mArcProgress.setProgress(mArcProgress.getMax());
-                mMinRemainingEditText.setText(getString(R.string.minutes,mArcProgress.getProgress() / 60));
-                mSecRemainingEditText.setText(getString(R.string.seconds,mArcProgress.getProgress() % 60));
+                mMinRemainingEditText.setText(getString(R.string.minutes,
+                        mArcProgress.getProgress() / 60));
+                mSecRemainingEditText.setText(getString(R.string.seconds,
+                        mArcProgress.getProgress() % 60));
                 mTimerPaused = false;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
@@ -373,18 +375,27 @@ public class HotBrewFragment extends Fragment
             }
         });
 
-        mSaveButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {}
-        });
-
         mEditButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
-            {}
+            {
+                mSaveButton.setVisibility(View.VISIBLE);
+                mEditButton.setVisibility(View.GONE);
+                // Create new brew to be edited and saved
+                mBrew = new Brew(mBrew.getType(), mBrew.getCoffeeWeight(), mBrew.getRatio(),
+                        mBrew.getBrewDuration(), mBrew.getCompletionDate());
+            }
+        });
+
+        mSaveButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Save new brew to database
+                mBrewViewModel.add(mBrew);
+            }
         });
     }
 
