@@ -23,4 +23,7 @@
     <string name="brew_time">BREW TIME</string>
     <string name="save_label">Save</string>
     <string name="edit_label">Edit</string>
+    <string name="coffee_g">coffee (g)</string>
+    <string name="water_g">water (g)</string>
+    <string name="ratio_label_lowercase">ratio</string>
 </resources>

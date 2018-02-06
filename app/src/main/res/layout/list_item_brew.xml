@@ -6,16 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_margin="3dp"
+    android:background="@color/opaque_black">
 
     <TextView
         android:id="@+id/text_view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Brew Title"
-        android:textColor="@android:color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/con_layout_duration"/>
 
@@ -28,12 +28,38 @@
         app:layout_constraintBottom_toTopOf="@id/con_layout_weights">
 
         <LinearLayout
-            android:id="@+id/lin_layout_minutes"
+            android:id="@+id/lin_layout_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/lin_layout_minutes"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_view_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="12"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="@string/hours_label"
+                tools:text="h"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_layout_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toRightOf="@id/lin_layout_hours"
             app:layout_constraintRight_toLeftOf="@id/lin_layout_seconds">
 
             <TextView
@@ -42,14 +68,13 @@
                 android:layout_height="wrap_content"
                 tools:text="4"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:textColor="@android:color/black"
+                android:text="@string/minutes_label"
                 tools:text="m"/>
 
         </LinearLayout>
@@ -68,14 +93,13 @@
                 android:layout_height="wrap_content"
                 tools:text="30"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:textColor="@android:color/black"
+                android:text="@string/seconds_label"
                 tools:text="s"/>
 
         </LinearLayout>
@@ -103,10 +127,10 @@
                 android:id="@+id/text_view_ratio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/ratio"
                 tools:text="16:1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/text_view_ratio_label"/>
 
@@ -114,9 +138,8 @@
                 android:id="@+id/text_view_ratio_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="@android:color/black"
                 android:gravity="bottom"
-                android:text="@string/ratio_label"
+                android:text="@string/ratio_label_lowercase"
                 tools:text="ratio"
                 app:layout_constraintLeft_toRightOf="@id/text_view_ratio"/>
 
@@ -134,17 +157,17 @@
                 android:id="@+id/text_view_coffee_weight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text=""
                 tools:text="20"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/text_view_coffee_weight_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="@android:color/black"
                 android:gravity="bottom"
+                android:text="@string/coffee_g"
                 tools:text="coffee (g)"/>
 
         </LinearLayout>
@@ -163,15 +186,14 @@
                 android:layout_height="wrap_content"
                 tools:text="320"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/text_view_water_weight_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="@android:color/black"
                 android:gravity="bottom"
+                android:text="@string/water_g"
                 tools:text="water (g)"/>
 
         </LinearLayout>

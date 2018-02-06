@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".controller.HotBrewActivity"/>
         <activity android:name=".controller.ColdBrewActivity"/>
+        <activity android:name=".controller.MyBrewsActivity"/>
     </application>
 
 </manifest>

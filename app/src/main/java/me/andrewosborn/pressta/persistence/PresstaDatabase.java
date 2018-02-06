@@ -25,16 +25,46 @@ public abstract class PresstaDatabase extends RoomDatabase
     {
         if (INSTANCE == null)
         {
-            INSTANCE = buildDatabase(context);
+            INSTANCE = buildInMemoryDatabase(context);
+
+            // Trigger db creation and, subsequently, RoomDatabase.Callback().onCreate()
+            INSTANCE.getOpenHelper().getReadableDatabase();
         }
 
         return INSTANCE;
     }
 
-    private static PresstaDatabase buildDatabase(final Context context)
+    private static PresstaDatabase buildInMemoryDatabase(final Context context)
     {
         return Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
                 PresstaDatabase.class)
+                .addCallback(new RoomDatabase.Callback()
+                {
+                    @Override
+                    public void onCreate(@NonNull SupportSQLiteDatabase db)
+                    {
+                        super.onCreate(db);
+
+                        Log.i(TAG, "onCreate() called");
+                        Completable.fromRunnable(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                getInstance(context).brewDao().insertAll(Brew.getDefaults());
+                            }
+                        })
+                                .subscribeOn(Schedulers.io())
+                                .subscribe();
+                    }
+                })
+                .build();
+    }
+
+    private static PresstaDatabase buildDatabase(final Context context)
+    {
+        return Room.databaseBuilder(context.getApplicationContext(),
+                PresstaDatabase.class, "pressta_db.db")
                 .addCallback(new RoomDatabase.Callback()
                 {
                     @Override

@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import me.andrewosborn.pressta.controller.ColdBrewFragment;
 import me.andrewosborn.pressta.controller.HotBrewFragment;
+import me.andrewosborn.pressta.controller.MyBrewsFragment;
 import me.andrewosborn.pressta.controller.PresstaFragment;
 
 
@@ -21,6 +22,7 @@ public interface ApplicationComponent
     void inject(PresstaFragment presstaFragment);
     void inject(HotBrewFragment hotBrewFragment);
     void inject(ColdBrewFragment coldBrewFragment);
+    void inject(MyBrewsFragment myBrewsFragment);
 
     Application application();
 }

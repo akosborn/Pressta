@@ -58,6 +58,20 @@ public class Brew
         this.completionDate = completionDate;
     }
 
+    @Ignore
+    public Brew(Type type, String title, int coffeeWeight, int ratio, int brewDuration, Date completionDate)
+    {
+        this.type = type;
+        this.title = title;
+        this.coffeeWeight = coffeeWeight;
+        this.waterWeight = coffeeWeight * ratio;
+        this.ratio = ratio;
+        this.brewDuration = brewDuration;
+        this.completionDate = completionDate;
+    }
+
+
+
     public int getId()
     {
         return id;
@@ -152,9 +166,9 @@ public class Brew
     {
         List<Brew> defaultBrews = new ArrayList<>();
 
-        Brew defaultHotBrew = new Brew(Type.HOT, 20, 16, (int) 4.5*60,
+        Brew defaultHotBrew = new Brew(Type.HOT, "Default Hot", 20, 16, (int) 4.5*60,
                 new Date(System.currentTimeMillis() + ((long) 4.5 * 60 * 3600 * 1000)));
-        Brew defaultColdBrew = new Brew(Type.COLD, 20, 8, (12 * 3600),
+        Brew defaultColdBrew = new Brew(Type.COLD, "Default Cold", 20, 8, (12 * 3600),
                 new Date(System.currentTimeMillis() + (12 * 3600 * 1000)));
         defaultBrews.add(defaultHotBrew);
         defaultBrews.add(defaultColdBrew);
