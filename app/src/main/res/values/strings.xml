@@ -22,4 +22,5 @@
     <string name="quick_brew_label">QUICK BREW</string>
     <string name="brew_time">BREW TIME</string>
     <string name="save_label">Save</string>
+    <string name="edit_label">Edit</string>
 </resources>
