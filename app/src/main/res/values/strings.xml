@@ -26,4 +26,5 @@
     <string name="coffee_g">coffee (g)</string>
     <string name="water_g">water (g)</string>
     <string name="ratio_label_lowercase">ratio</string>
+    <string name="toast_brew_saved">Brew succesfully saved!</string>
 </resources>

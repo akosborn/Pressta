@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
@@ -395,6 +396,8 @@ public class HotBrewFragment extends Fragment
             {
                 // Save new brew to database
                 mBrewViewModel.add(mBrew);
+                Toast.makeText(getContext(), R.string.toast_brew_saved, Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }
