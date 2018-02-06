@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:text="@string/minutes_label"
                 tools:text="m"/>
 
@@ -98,7 +98,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:text="@string/seconds_label"
                 tools:text="s"/>
 
@@ -138,7 +138,7 @@
                 android:id="@+id/text_view_ratio_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:text="@string/ratio_label_lowercase"
                 tools:text="ratio"
                 app:layout_constraintLeft_toRightOf="@id/text_view_ratio"/>
@@ -166,7 +166,7 @@
                 android:id="@+id/text_view_coffee_weight_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:text="@string/coffee_g"
                 tools:text="coffee (g)"/>
 
@@ -192,7 +192,7 @@
                 android:id="@+id/text_view_water_weight_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:text="@string/water_g"
                 tools:text="water (g)"/>
 
