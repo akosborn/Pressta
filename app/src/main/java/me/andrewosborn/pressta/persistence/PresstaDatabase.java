@@ -38,26 +38,7 @@ public abstract class PresstaDatabase extends RoomDatabase
     {
         return Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
                 PresstaDatabase.class)
-                .addCallback(new RoomDatabase.Callback()
-                {
-                    @Override
-                    public void onCreate(@NonNull SupportSQLiteDatabase db)
-                    {
-                        super.onCreate(db);
-
-                        Log.i(TAG, "onCreate() called");
-                        Completable.fromRunnable(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                getInstance(context).brewDao().insertAll(Brew.getDefaults());
-                            }
-                        })
-                                .subscribeOn(Schedulers.io())
-                                .subscribe();
-                    }
-                })
+                .addCallback(getCallback(context))
                 .build();
     }
 
@@ -65,27 +46,33 @@ public abstract class PresstaDatabase extends RoomDatabase
     {
         return Room.databaseBuilder(context.getApplicationContext(),
                 PresstaDatabase.class, "pressta_db.db")
-                .addCallback(new RoomDatabase.Callback()
+                .addCallback(getCallback(context))
+                .build();
+    }
+
+    @NonNull
+    private static Callback getCallback(final Context context)
+    {
+        return new Callback()
+        {
+            @Override
+            public void onCreate(@NonNull SupportSQLiteDatabase db)
+            {
+                super.onCreate(db);
+
+                Log.i(TAG, "onCreate() called");
+                Completable.fromRunnable(new Runnable()
                 {
                     @Override
-                    public void onCreate(@NonNull SupportSQLiteDatabase db)
+                    public void run()
                     {
-                        super.onCreate(db);
-
-                        Log.i(TAG, "onCreate() called");
-                        Completable.fromRunnable(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                getInstance(context).brewDao().insertAll(Brew.getDefaults());
-                            }
-                        })
-                                .subscribeOn(Schedulers.io())
-                                .subscribe();
+                        getInstance(context).brewDao().insertAll(Brew.getDefaults());
                     }
                 })
-                .build();
+                        .subscribeOn(Schedulers.io())
+                        .subscribe();
+            }
+        };
     }
 
     public static void destroyInstance()
