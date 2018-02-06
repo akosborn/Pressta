@@ -40,7 +40,7 @@ public class BrewViewModel extends ViewModel
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        Log.e(TAG, mBrew.toString() + "couldn't be saved to db", throwable);
+                        Log.e(TAG, mBrew.toString() + " couldn't be saved to db", throwable);
                     }
                 })
                 .subscribeOn(Schedulers.io())
