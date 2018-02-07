@@ -161,8 +161,87 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp">
+
+        <TextView
+            android:id="@+id/text_view_ratio_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/lin_layout_ratio"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_horizontal"
+            android:text="@string/ratio_label"
+            android:textSize="15sp"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/lin_layout_ratio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_ratio_label"
+            app:layout_constraintBottom_toTopOf="@id/linear_layout_weight_labels"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.75"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/layout_rounded_bg">
+
+            <TextView
+                android:id="@+id/text_view_seekbar_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                tools:text="16"
+                android:textSize="30sp"
+                android:minEms="2"/>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekbar_ratio"
+                android:max="19"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_weight_labels"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lin_layout_ratio"
+            app:layout_constraintBottom_toTopOf="@id/lin_layout_weights"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:gravity="center_horizontal"
+                android:text="@string/text_view_label_coffee"
+                android:labelFor="@id/edit_text_coffee_weight"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:gravity="center_horizontal"
+                android:text="@string/text_view_label_water"
+                android:labelFor="@id/edit_text_water_weight"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lin_layout_weights"
@@ -172,7 +251,8 @@
             app:layout_constraintWidth_percent="0.75"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linear_layout_weight_labels"
+            app:layout_constraintBottom_toTopOf="@id/con_layout_buttons"
             android:layout_marginBottom="20dp"
             android:background="@drawable/layout_rounded_bg">
 
@@ -203,79 +283,36 @@
                 android:cursorVisible="false"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linear_layout_weight_labels"
-            android:layout_width="0dp"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/con_layout_buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.75"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/lin_layout_weights"
-            android:layout_marginBottom="10dp">
+            app:layout_constraintTop_toBottomOf="@id/lin_layout_weights">
 
-            <TextView
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/button_edit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="50"
-                android:gravity="center_horizontal"
-                android:text="@string/text_view_label_coffee"
-                android:labelFor="@id/edit_text_coffee_weight"
-                android:textSize="15sp"/>
+                android:text="@string/edit_label"
+                android:textColor="@android:color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/button_save"/>
 
-            <TextView
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="50"
-                android:gravity="center_horizontal"
-                android:text="@string/text_view_label_water"
-                android:labelFor="@id/edit_text_water_weight"
-                android:textSize="15sp"/>
+                android:text="@string/save_label"
+                android:textColor="@android:color/black"
+                app:layout_constraintLeft_toRightOf="@id/button_edit"
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="gone"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lin_layout_ratio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/linear_layout_weight_labels"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.75"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/layout_rounded_bg">
-
-            <TextView
-                android:id="@+id/text_view_seekbar_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                tools:text="16"
-                android:textSize="30sp"
-                android:minEms="2"/>
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekbar_ratio"
-                android:max="19"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.75"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/lin_layout_ratio"
-            android:gravity="center_horizontal"
-            android:text="@string/ratio_label"
-            android:textSize="15sp"
-            android:layout_marginBottom="10dp"/>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 

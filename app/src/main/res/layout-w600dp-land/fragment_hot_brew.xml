@@ -172,10 +172,9 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/lin_layout_bottom"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_chainStyle="spread"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent="0.75"
-            android:layout_marginBottom="40dp"
             android:orientation="vertical">
 
             <TextView
@@ -228,10 +227,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lin_layout_top"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/con_layout_buttons"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent="0.75"
-            android:layout_marginTop="40dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -295,6 +293,37 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/con_layout_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lin_layout_bottom">
+
+            <Button
+                android:id="@+id/button_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_label"
+                android:textColor="@android:color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/button_save"/>
+
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_label"
+                android:textColor="@android:color/black"
+                app:layout_constraintLeft_toRightOf="@id/button_edit"
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="gone"/>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 
