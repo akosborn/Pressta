@@ -1,6 +1,7 @@
 package me.andrewosborn.pressta.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
@@ -13,16 +14,26 @@ import me.andrewosborn.pressta.persistence.BrewRepository;
 public class BrewViewModel extends ViewModel
 {
     private static final String TAG = "BrewViewModel";
+
     private BrewRepository brewRepository;
+    private LiveData<Brew> brewLiveData;
 
     BrewViewModel(BrewRepository brewRepository)
     {
         this.brewRepository = brewRepository;
     }
 
+    public LiveData<Brew> getBrewLiveData()
+    {
+        return brewLiveData;
+    }
+
     public LiveData<Brew> getBrew(int id)
     {
-        return brewRepository.getById(id);
+        if (brewLiveData == null)
+            brewLiveData = brewRepository.getById(id);
+
+        return brewLiveData;
     }
 
     public void add(final Brew mBrew)

@@ -24,7 +24,7 @@
         android:id="@+id/con_layout_countdown"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +57,7 @@
             app:arc_suffix_text_size="0dp"
             app:arc_text_color="@android:color/white"
             app:arc_bottom_text_size="15sp"
+            android:layout_marginTop="5dp"
             app:arc_bottom_text="TIME REMAINING"/>
 
         <EditText

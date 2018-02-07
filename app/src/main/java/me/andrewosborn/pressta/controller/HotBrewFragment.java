@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -46,8 +47,10 @@ import me.andrewosborn.pressta.viewmodel.BrewViewModel;
 public class HotBrewFragment extends Fragment
 {
     private static final String TAG = "HotBrewFragment";
-
     public static final int COUNTDOWN_INTERVAL = 150;
+    private static final String TIME_REMAINING_KEY = "time_remaining";
+
+    private TextView mTitleTextView;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ArcProgress mArcProgress;
@@ -61,9 +64,7 @@ public class HotBrewFragment extends Fragment
     private ImageButton mResetTimerButton;
     private Button mSaveButton;
     private Button mEditButton;
-
     private AnimatorSet animatorSet;
-
     private int mTimeRemaining;
     private boolean mTimerPaused = false;
 
@@ -72,7 +73,7 @@ public class HotBrewFragment extends Fragment
 
     private BrewViewModel mBrewViewModel;
 
-    private Brew mBrew;
+    private Brew mBrew = new Brew();
 
     public static HotBrewFragment newInstance()
     {
@@ -80,33 +81,41 @@ public class HotBrewFragment extends Fragment
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
+    public void onCreate(@Nullable final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         ((PresstaApplication) getActivity().getApplication())
                 .getApplicationComponent()
                 .inject(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
 
         mBrewViewModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(BrewViewModel.class);
+
+        // Assign mBrewViewModel data to mBrew if a configuration change occurred
+        LiveData<Brew> brewLiveData = mBrewViewModel.getBrewLiveData();
+        if (brewLiveData != null && mBrew == null)
+        {
+            mBrew = mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).getValue();
+        }
+
         mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
         {
             @Override
             public void onChanged(@Nullable Brew brew)
             {
-                if (mBrew == null)
+                Log.i(TAG, "mBrewViewModel onChanged() called");
+                HotBrewFragment.this.mBrew = brew;
+                if (mBrew != null)
                 {
-                    Log.i(TAG, "mBrewViewModel onChanged() called");
-                    HotBrewFragment.this.mBrew = brew;
-                    if (mBrew != null)
-                        setupUI();
+                    setupUI();
+                    if (savedInstanceState != null)
+                    {
+                        int timeRemaining = savedInstanceState.getInt(TIME_REMAINING_KEY);
+                        createTimer(timeRemaining);
+                    }
+                    else
+                        createTimer(mBrew.getBrewDuration());
                 }
             }
         });
@@ -129,8 +138,17 @@ public class HotBrewFragment extends Fragment
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(TIME_REMAINING_KEY, mTimeRemaining);
+    }
+
     private void assignViews(View view)
     {
+        mTitleTextView = (TextView) view.findViewById(R.id.text_view_title);
         mCoffeeWeightField = (EditText) view.findViewById(R.id.edit_text_coffee_weight);
         mWaterWeightField = (EditText) view.findViewById(R.id.edit_text_water_weight);
         mArcProgress = (ArcProgress) view.findViewById(R.id.progress_bar_brew_countdown);
@@ -298,15 +316,14 @@ public class HotBrewFragment extends Fragment
         mRatioSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser)
             {
                 // check if triggered by user or code
-                if (b)
+                if (fromUser)
                 {
                     mRatioTextView.setText(getString(R.string.ratio, i + 1));
                     mBrew.setRatio(seekBar.getProgress() + 1);
-                }
-                else
+                } else
                     mRatioTextView.setText(getString(R.string.ratio, i));
 
                 calculate();
@@ -404,10 +421,10 @@ public class HotBrewFragment extends Fragment
 
     private void setupUI()
     {
+        mTitleTextView.setText(mBrew.getTitle());
         mRatioSeekbar.setProgress(mBrew.getRatio());
         mCoffeeWeightField.setText(String.valueOf(mBrew.getCoffeeWeight()));
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
-        createTimer(mBrew.getBrewDuration());
     }
 
     private void toggleEditTextInputType()
@@ -452,7 +469,7 @@ public class HotBrewFragment extends Fragment
     {
         int secondsLeft = 0;
 
-        public MyTimer(long millisInFuture, long countDownInterval)
+        MyTimer(long millisInFuture, long countDownInterval)
         {
             super(millisInFuture, countDownInterval);
         }
