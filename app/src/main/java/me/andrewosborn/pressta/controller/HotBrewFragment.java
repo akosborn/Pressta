@@ -50,6 +50,7 @@ public class HotBrewFragment extends Fragment
     public static final int COUNTDOWN_INTERVAL = 150;
     private static final String TIME_REMAINING_KEY = "time_remaining";
     private static final String IS_TIMER_ACTIVE_KEY = "is_timer_active";
+    private static final String IS_TIMER_FINISHED_KEY = "is_timer_finished";
 
     private TextView mTitleTextView;
     private EditText mCoffeeWeightField;
@@ -117,13 +118,20 @@ public class HotBrewFragment extends Fragment
                     setupUI();
                     if (savedInstanceState != null)
                     {
-                        if (mTimeRemaining == 0)
+                        boolean isTimerActive =
+                                savedInstanceState.getBoolean(IS_TIMER_ACTIVE_KEY);
+                        boolean isTimerFinished =
+                                savedInstanceState.getBoolean(IS_TIMER_FINISHED_KEY);
+
+                        if (mTimeRemaining == 0 && !isTimerFinished)
                             mTimeRemaining = mBrew.getBrewDuration();
 
                         createTimer(mBrew.getBrewDuration(), mTimeRemaining);
 
-                        if (savedInstanceState.getBoolean(IS_TIMER_ACTIVE_KEY))
+                        if (isTimerActive)
                             mStartTimerButton.performClick();
+                        else if (isTimerFinished)
+                            mCountDownTimer.onFinish();
                         else
                             mTimerPaused = true;
                     }
@@ -157,11 +165,8 @@ public class HotBrewFragment extends Fragment
         super.onSaveInstanceState(outState);
 
         outState.putInt(TIME_REMAINING_KEY, mTimeRemaining);
-
-        if (mCountDownTimer.isActive)
-            outState.putBoolean(IS_TIMER_ACTIVE_KEY, true);
-        else
-            outState.putBoolean(IS_TIMER_ACTIVE_KEY, false);
+        outState.putBoolean(IS_TIMER_ACTIVE_KEY, mCountDownTimer.isActive());
+        outState.putBoolean(IS_TIMER_FINISHED_KEY, mCountDownTimer.isFinished());
     }
 
     private void assignViews(View view)
@@ -488,6 +493,7 @@ public class HotBrewFragment extends Fragment
     {
         private int secondsLeft;
         private boolean isActive;
+        private boolean isFinished;
 
         MyTimer(long millisInFuture, long countDownInterval)
         {
@@ -502,6 +508,11 @@ public class HotBrewFragment extends Fragment
         void setActive(boolean isActive)
         {
             this.isActive = isActive;
+        }
+
+        public boolean isFinished()
+        {
+            return isFinished;
         }
 
         @Override
@@ -533,6 +544,8 @@ public class HotBrewFragment extends Fragment
         public void onFinish()
         {
             mArcProgress.setProgress(0);
+            isActive = false;
+            isFinished = true;
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             {
