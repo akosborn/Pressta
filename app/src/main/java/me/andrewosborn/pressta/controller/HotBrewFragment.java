@@ -49,12 +49,13 @@ public class HotBrewFragment extends Fragment
     private static final String TAG = "HotBrewFragment";
     public static final int COUNTDOWN_INTERVAL = 150;
     private static final String TIME_REMAINING_KEY = "time_remaining";
+    private static final String IS_TIMER_ACTIVE_KEY = "is_timer_active";
 
     private TextView mTitleTextView;
     private EditText mCoffeeWeightField;
     private EditText mWaterWeightField;
     private ArcProgress mArcProgress;
-    private CountDownTimer mCountDownTimer;
+    private MyTimer mCountDownTimer;
     private EditText mMinRemainingEditText;
     private EditText mSecRemainingEditText;
     private AppCompatSeekBar mRatioSeekbar;
@@ -73,7 +74,7 @@ public class HotBrewFragment extends Fragment
 
     private BrewViewModel mBrewViewModel;
 
-    private Brew mBrew = new Brew();
+    private Brew mBrew;
 
     public static HotBrewFragment newInstance()
     {
@@ -99,6 +100,11 @@ public class HotBrewFragment extends Fragment
             mBrew = mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).getValue();
         }
 
+        if (savedInstanceState != null)
+        {
+            mTimeRemaining = savedInstanceState.getInt(TIME_REMAINING_KEY);
+        }
+
         mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
         {
             @Override
@@ -111,11 +117,18 @@ public class HotBrewFragment extends Fragment
                     setupUI();
                     if (savedInstanceState != null)
                     {
-                        int timeRemaining = savedInstanceState.getInt(TIME_REMAINING_KEY);
-                        createTimer(timeRemaining);
+                        if (mTimeRemaining == 0)
+                            mTimeRemaining = mBrew.getBrewDuration();
+
+                        createTimer(mBrew.getBrewDuration(), mTimeRemaining);
+
+                        if (savedInstanceState.getBoolean(IS_TIMER_ACTIVE_KEY))
+                            mStartTimerButton.performClick();
+                        else
+                            mTimerPaused = true;
                     }
                     else
-                        createTimer(mBrew.getBrewDuration());
+                        createTimer(mBrew.getBrewDuration(), mBrew.getBrewDuration());
                 }
             }
         });
@@ -143,7 +156,12 @@ public class HotBrewFragment extends Fragment
     {
         super.onSaveInstanceState(outState);
 
-        outState.putSerializable(TIME_REMAINING_KEY, mTimeRemaining);
+        outState.putInt(TIME_REMAINING_KEY, mTimeRemaining);
+
+        if (mCountDownTimer.isActive)
+            outState.putBoolean(IS_TIMER_ACTIVE_KEY, true);
+        else
+            outState.putBoolean(IS_TIMER_ACTIVE_KEY, false);
     }
 
     private void assignViews(View view)
@@ -368,6 +386,7 @@ public class HotBrewFragment extends Fragment
                 mTimerPaused = true;
                 mPauseTimerButton.setVisibility(View.GONE);
                 mStartTimerButton.setVisibility(View.VISIBLE);
+                mCountDownTimer.setActive(false);
                 mCountDownTimer.cancel();
             }
         });
@@ -465,13 +484,24 @@ public class HotBrewFragment extends Fragment
         mWaterWeightField.setText(String.valueOf(mBrew.getWaterWeight()));
     }
 
-    public class MyTimer extends CountDownTimer
+    class MyTimer extends CountDownTimer
     {
-        int secondsLeft = 0;
+        private int secondsLeft;
+        private boolean isActive;
 
         MyTimer(long millisInFuture, long countDownInterval)
         {
             super(millisInFuture, countDownInterval);
+        }
+
+        boolean isActive()
+        {
+            return isActive;
+        }
+
+        void setActive(boolean isActive)
+        {
+            this.isActive = isActive;
         }
 
         @Override
@@ -490,8 +520,11 @@ public class HotBrewFragment extends Fragment
                 mMinRemainingEditText.setText(getString(R.string.minutes,secondsLeft / 60));
                 mSecRemainingEditText.setText(getString(R.string.seconds,secondsLeft % 60));
                 mArcProgress.setProgress(secondsLeft);
-                mTimeRemaining = secondsLeft;
             }
+
+            mTimeRemaining = secondsLeft;
+            if (!isActive)
+                isActive = true;
 
             Log.i("CountDownTimer", "Progress at " + mArcProgress.getProgress());
         }
@@ -539,15 +572,15 @@ public class HotBrewFragment extends Fragment
         }
     }
 
-    private void createTimer(int seconds)
+    private void createTimer(int seconds, int progress)
     {
-        long durationInMillis = (long) (seconds * 1000);
+        long durationInMillis = (long) (progress * 1000);
 
         mArcProgress.setMax(seconds);
-        mArcProgress.setProgress(seconds);
+        mArcProgress.setProgress(progress);
 
-        mMinRemainingEditText.setText(getString(R.string.minutes,seconds / 60));
-        mSecRemainingEditText.setText(getString(R.string.seconds,seconds % 60));
+        mMinRemainingEditText.setText(getString(R.string.minutes,progress / 60));
+        mSecRemainingEditText.setText(getString(R.string.seconds,progress % 60));
 
         mCountDownTimer = new MyTimer(durationInMillis, COUNTDOWN_INTERVAL);
     }
