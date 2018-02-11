@@ -36,7 +36,6 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +56,7 @@ public class HotBrewFragment extends Fragment
     private static final String TIMER_STATUS_KEY = "timer_status_key";
     private static final SimpleDateFormat sDateFormat =
             new SimpleDateFormat("MMM d, h:mm a", Locale.US);
-    private static int CURRENT_BREW = Brew.DEFAULT_HOT_BREW_ID;
+    private static final String ARG_BREW_ID = "brew_id";
 
     private TextView mTitleTextView;
     private EditText mCoffeeWeightField;
@@ -86,15 +85,23 @@ public class HotBrewFragment extends Fragment
 
     private Brew mBrew;
 
-    public static HotBrewFragment newInstance()
+    public static HotBrewFragment newInstance(int brewId)
     {
-        return new HotBrewFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_BREW_ID, brewId);
+
+        HotBrewFragment fragment = new HotBrewFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        int brewId = getArguments().getInt(ARG_BREW_ID);
 
         ((PresstaApplication) getActivity().getApplication())
                 .getApplicationComponent()
@@ -107,7 +114,7 @@ public class HotBrewFragment extends Fragment
         LiveData<Brew> brewLiveData = mBrewViewModel.getBrewLiveData();
         if (brewLiveData != null && mBrew == null)
         {
-            mBrew = mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).getValue();
+            mBrew = mBrewViewModel.getBrew(brewId).getValue();
         }
 
         if (savedInstanceState != null)
@@ -115,7 +122,7 @@ public class HotBrewFragment extends Fragment
             mTimeRemaining = savedInstanceState.getInt(TIME_REMAINING_KEY);
         }
 
-        mBrewViewModel.getBrew(CURRENT_BREW).observe(this, new Observer<Brew>()
+        mBrewViewModel.getBrew(brewId).observe(this, new Observer<Brew>()
         {
             @Override
             public void onChanged(@Nullable Brew brew)
@@ -473,7 +480,6 @@ public class HotBrewFragment extends Fragment
                 }
                 // Save new brew to database
                 mBrewViewModel.add(mBrew);
-                CURRENT_BREW = mBrew.getId();
                 Toast.makeText(getContext(), R.string.toast_brew_saved, Toast.LENGTH_SHORT)
                         .show();
             }

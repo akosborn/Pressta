@@ -1,46 +1,59 @@
 package me.andrewosborn.pressta.controller;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.Callable;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
 import me.andrewosborn.pressta.model.Type;
-import me.andrewosborn.pressta.persistence.PresstaDatabase;
 
 
 public class PresstaFragment extends Fragment
 {
+    private static final String DEFAULT_HOT_BREW_KEY = "default_hot_brew";
+    private static final String DEFAULT_COLD_BREW_KEY = "default_cold_brew";
     private RelativeLayout mQuickBrewRelativeLayout;
     private RelativeLayout mMyBrewsRelativeLayout;
     private TextView mQuickColdBrewTextView;
     private TextView mQuickHotBrewTextView;
 
     private Intent mIntent;
+    private SharedPreferences mSharedPreferences;
 
     private Type mBrewType = Type.HOT;
 
     public static Fragment newInstance()
     {
         return new PresstaFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        if (!mSharedPreferences.contains(DEFAULT_HOT_BREW_KEY))
+        {
+            editor.putInt(DEFAULT_HOT_BREW_KEY, Brew.DEFAULT_HOT_BREW_ID);
+            editor.apply();
+        }
+        if (!mSharedPreferences.contains(DEFAULT_COLD_BREW_KEY))
+        {
+            editor.putInt(DEFAULT_COLD_BREW_KEY, Brew.DEFAULT_COLD_BREW_ID);
+            editor.apply();
+        }
     }
 
     @Nullable
@@ -61,7 +74,8 @@ public class PresstaFragment extends Fragment
             {
 
                 if (mBrewType.equals(Type.HOT))
-                    mIntent = new Intent(getActivity(), HotBrewActivity.class);
+                    mIntent = HotBrewActivity.newIntent(getActivity(),
+                                    mSharedPreferences.getInt(DEFAULT_HOT_BREW_KEY, 1));
                 else if (mBrewType.equals(Type.COLD))
                     mIntent = new Intent(getActivity(), ColdBrewActivity.class);
 
