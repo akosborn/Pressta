@@ -313,6 +313,16 @@
                 android:text="@string/edit_label"
                 android:textColor="@android:color/black"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/button_new"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/button_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_label"
+                android:textColor="@android:color/black"
+                app:layout_constraintLeft_toRightOf="@id/button_edit"
                 app:layout_constraintRight_toLeftOf="@id/button_save"/>
 
             <Button
@@ -321,7 +331,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/save_label"
                 android:textColor="@android:color/black"
-                app:layout_constraintLeft_toRightOf="@id/button_edit"
+                app:layout_constraintLeft_toRightOf="@id/button_new"
                 app:layout_constraintRight_toRightOf="parent"
                 android:visibility="gone"/>
 

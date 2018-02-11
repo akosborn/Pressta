@@ -34,8 +34,12 @@ import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -51,6 +55,9 @@ public class HotBrewFragment extends Fragment
     public static final int COUNTDOWN_INTERVAL = 150;
     private static final String TIME_REMAINING_KEY = "time_remaining";
     private static final String TIMER_STATUS_KEY = "timer_status_key";
+    private static final SimpleDateFormat sDateFormat =
+            new SimpleDateFormat("MMM d, h:mm a", Locale.US);
+    private static int CURRENT_BREW = Brew.DEFAULT_HOT_BREW_ID;
 
     private TextView mTitleTextView;
     private EditText mCoffeeWeightField;
@@ -66,6 +73,7 @@ public class HotBrewFragment extends Fragment
     private ImageButton mResetTimerButton;
     private Button mSaveButton;
     private Button mEditButton;
+    private Button mNewButton;
     private AnimatorSet animatorSet;
     private int mTimeRemaining;
     private TimerStatus mTimerStatus;
@@ -107,7 +115,7 @@ public class HotBrewFragment extends Fragment
             mTimeRemaining = savedInstanceState.getInt(TIME_REMAINING_KEY);
         }
 
-        mBrewViewModel.getBrew(Brew.DEFAULT_HOT_BREW_ID).observe(this, new Observer<Brew>()
+        mBrewViewModel.getBrew(CURRENT_BREW).observe(this, new Observer<Brew>()
         {
             @Override
             public void onChanged(@Nullable Brew brew)
@@ -203,6 +211,7 @@ public class HotBrewFragment extends Fragment
         mResetTimerButton = (ImageButton) view.findViewById(R.id.button_reset);
         mSaveButton = (Button) view.findViewById(R.id.button_save);
         mEditButton = (Button) view.findViewById(R.id.button_edit);
+        mNewButton = (Button) view.findViewById(R.id.button_new);
     }
 
     private void setListeners()
@@ -426,6 +435,19 @@ public class HotBrewFragment extends Fragment
             }
         });
 
+        mNewButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mSaveButton.setVisibility(View.VISIBLE);
+                // Create new brew to be edited and saved
+                mBrew = new Brew(mBrew.getType(), mBrew.getCoffeeWeight(), mBrew.getRatio(),
+                        mBrew.getBrewDuration(), mBrew.getCompletionDate());
+                mTitleTextView.setText(mBrew.getTitle());
+            }
+        });
+
         mEditButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -433,9 +455,6 @@ public class HotBrewFragment extends Fragment
             {
                 mSaveButton.setVisibility(View.VISIBLE);
                 mEditButton.setVisibility(View.GONE);
-                // Create new brew to be edited and saved
-                mBrew = new Brew(mBrew.getType(), mBrew.getCoffeeWeight(), mBrew.getRatio(),
-                        mBrew.getBrewDuration(), mBrew.getCompletionDate());
             }
         });
 
@@ -444,8 +463,17 @@ public class HotBrewFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+                // TODO: 2/9/2018 Handle saving more than one brew (Brew.id unique conflict)
+                if (mBrew.getId() != null)
+                    mBrew.setId(null);
+                if (mBrew.getTitle() == null)
+                {
+                    Date date = new Date(System.currentTimeMillis());
+                    mBrew.setTitle(sDateFormat.format(date));
+                }
                 // Save new brew to database
                 mBrewViewModel.add(mBrew);
+                CURRENT_BREW = mBrew.getId();
                 Toast.makeText(getContext(), R.string.toast_brew_saved, Toast.LENGTH_SHORT)
                         .show();
             }

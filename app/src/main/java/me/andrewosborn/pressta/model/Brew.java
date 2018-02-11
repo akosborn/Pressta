@@ -20,7 +20,7 @@ public class Brew
     public static final int DEFAULT_COLD_BREW_ID = 2;
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private Integer id;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -72,12 +72,12 @@ public class Brew
 
 
 
-    public int getId()
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(Integer id)
     {
         this.id = id;
     }
