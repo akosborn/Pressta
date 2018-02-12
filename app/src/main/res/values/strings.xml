@@ -28,4 +28,6 @@
     <string name="ratio_label_lowercase">ratio</string>
     <string name="toast_brew_saved">Brew succesfully saved!</string>
     <string name="new_label">New</string>
+    <string name="cold_label">COLD</string>
+    <string name="hot_label">HOT</string>
 </resources>
