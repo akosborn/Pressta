@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -234,6 +236,8 @@ public class MyBrewsFragment extends Fragment
         private TextView mCoffeeWeightTextView;
         private TextView mWaterWeightTextView;
         private LinearLayout mHoursLinLayout;
+        private ImageView mStarBorderImgView;
+        private ImageView mFilledStarImgView;
 
         HotBrewHolder(View itemView)
         {
@@ -249,6 +253,27 @@ public class MyBrewsFragment extends Fragment
             mCoffeeWeightTextView = (TextView) itemView.findViewById(R.id.text_view_coffee_weight);
             mWaterWeightTextView = (TextView) itemView.findViewById(R.id.text_view_water_weight);
             mHoursLinLayout = (LinearLayout) itemView.findViewById(R.id.lin_layout_hours);
+            mStarBorderImgView = (ImageView) itemView.findViewById(R.id.img_btn_star_border);
+            mFilledStarImgView = (ImageView) itemView.findViewById(R.id.img_btn_star);
+
+            mStarBorderImgView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    mStarBorderImgView.setVisibility(View.GONE);
+                    mFilledStarImgView.setVisibility(View.VISIBLE);
+                }
+            });
+            mFilledStarImgView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    mFilledStarImgView.setVisibility(View.GONE);
+                    mStarBorderImgView.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         @Override
