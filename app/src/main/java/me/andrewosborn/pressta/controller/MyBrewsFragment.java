@@ -110,7 +110,7 @@ public class MyBrewsFragment extends Fragment
 
     private void assignViews(View view)
     {
-        mBrewRecyclerView = view.findViewById(R.id.brew_recycler_view);
+        mBrewRecyclerView = view.findViewById(R.id.hot_brew_recycler_view);
     }
 
     private class BrewAdapter extends RecyclerView.Adapter<BrewHolder>
