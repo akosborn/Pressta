@@ -3,6 +3,7 @@ package me.andrewosborn.pressta.controller;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import me.andrewosborn.pressta.PresstaApplication;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
+import me.andrewosborn.pressta.model.Type;
 import me.andrewosborn.pressta.viewmodel.BrewListViewModel;
 
 public class MyBrewsFragment extends Fragment
@@ -181,7 +183,15 @@ public class MyBrewsFragment extends Fragment
         @Override
         public void onClick(View view)
         {
-            // TODO: 2/6/2018 Handle clicks for brew list items
+            if (mBrew.getType().equals(Type.HOT))
+            {
+                Intent intent = HotBrewActivity.newIntent(getContext(), mBrew.getId());
+                startActivity(intent);
+            }
+            else if (mBrew.getType().equals(Type.COLD))
+            {
+                // TODO: 2/11/2018 Create intent for ColdBrewActivity
+            }
         }
 
         void bindBrew(Brew brew)
