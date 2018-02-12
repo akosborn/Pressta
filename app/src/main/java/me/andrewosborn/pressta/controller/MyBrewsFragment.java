@@ -3,7 +3,9 @@ package me.andrewosborn.pressta.controller;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +32,9 @@ import me.andrewosborn.pressta.viewmodel.BrewListViewModel;
 public class MyBrewsFragment extends Fragment
 {
     private static final String TAG = "MyBrewsFragment";
+    private static final String DEFAULT_HOT_BREW_KEY = "default_hot_brew";
+    private static final String DEFAULT_COLD_BREW_KEY = "default_cold_brew";
+    private static final String PREFERENCES_FILE_KEY = "app_preferences";
 
     @Inject
     ViewModelProvider.Factory mViewModelFactory;
@@ -44,6 +48,10 @@ public class MyBrewsFragment extends Fragment
 
     private List<Brew> mHotBrews;
     private List<Brew> mColdBrews;
+    private SharedPreferences mSharedPreferences;
+
+    private int mDefaultHotBrewId;
+    private int mDefaultColdBrewId;
 
     public static MyBrewsFragment newInstance()
     {
@@ -58,6 +66,11 @@ public class MyBrewsFragment extends Fragment
         ((PresstaApplication) getActivity().getApplication())
                 .getApplicationComponent()
                 .inject(this);
+
+        mSharedPreferences = getActivity().getSharedPreferences(PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
+
+        mDefaultHotBrewId = mSharedPreferences.getInt(DEFAULT_HOT_BREW_KEY, Brew.DEFAULT_HOT_BREW_ID);
+        mDefaultColdBrewId = mSharedPreferences.getInt(DEFAULT_COLD_BREW_KEY, Brew.DEFAULT_COLD_BREW_ID);
     }
 
     @Override
@@ -261,8 +274,13 @@ public class MyBrewsFragment extends Fragment
                 @Override
                 public void onClick(View view)
                 {
-                    mStarBorderImgView.setVisibility(View.GONE);
-                    mFilledStarImgView.setVisibility(View.VISIBLE);
+                    mSharedPreferences.edit().putInt(DEFAULT_HOT_BREW_KEY, mBrew.getId()).apply();
+                    mDefaultHotBrewId = mSharedPreferences.getInt(DEFAULT_HOT_BREW_KEY, 1);
+                    mHotBrewAdapter.notifyDataSetChanged();
+                    // TODO: 2/12/2018 Implement more efficient way to update data set
+
+//                    mStarBorderImgView.setVisibility(View.GONE);
+//                    mFilledStarImgView.setVisibility(View.VISIBLE);
                 }
             });
             mFilledStarImgView.setOnClickListener(new View.OnClickListener()
@@ -270,8 +288,11 @@ public class MyBrewsFragment extends Fragment
                 @Override
                 public void onClick(View view)
                 {
-                    mFilledStarImgView.setVisibility(View.GONE);
-                    mStarBorderImgView.setVisibility(View.VISIBLE);
+                    mHotBrewAdapter.notifyDataSetChanged();
+                    // TODO: 2/12/2018 Implement more efficient way to update data set
+
+//                    mFilledStarImgView.setVisibility(View.GONE);
+//                    mStarBorderImgView.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -312,6 +333,17 @@ public class MyBrewsFragment extends Fragment
             mRatioTextView.setText(getString(R.string.ratio, mBrew.getRatio()));
             mCoffeeWeightTextView.setText(String.valueOf(mBrew.getCoffeeWeight()));
             mWaterWeightTextView.setText(String.valueOf(mBrew.getWaterWeight()));
+
+            if (mBrew.getId() == mDefaultHotBrewId)
+            {
+                mStarBorderImgView.setVisibility(View.GONE);
+                mFilledStarImgView.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                mStarBorderImgView.setVisibility(View.VISIBLE);
+                mFilledStarImgView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -328,6 +360,8 @@ public class MyBrewsFragment extends Fragment
         private TextView mCoffeeWeightTextView;
         private TextView mWaterWeightTextView;
         private LinearLayout mHoursLinLayout;
+        private ImageView mStarBorderImgView;
+        private ImageView mFilledStarImgView;
 
         ColdBrewHolder(View itemView)
         {
@@ -343,6 +377,35 @@ public class MyBrewsFragment extends Fragment
             mCoffeeWeightTextView = (TextView) itemView.findViewById(R.id.text_view_coffee_weight);
             mWaterWeightTextView = (TextView) itemView.findViewById(R.id.text_view_water_weight);
             mHoursLinLayout = (LinearLayout) itemView.findViewById(R.id.lin_layout_hours);
+            mStarBorderImgView = (ImageView) itemView.findViewById(R.id.img_btn_star_border);
+            mFilledStarImgView = (ImageView) itemView.findViewById(R.id.img_btn_star);
+
+            mStarBorderImgView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    mSharedPreferences.edit().putInt(DEFAULT_COLD_BREW_KEY, mBrew.getId()).apply();
+                    mColdBrewAdapter.notifyDataSetChanged();
+                    // TODO: 2/12/2018 Implement more efficient way to update data set
+
+                    mStarBorderImgView.setVisibility(View.GONE);
+                    mFilledStarImgView.setVisibility(View.VISIBLE);
+                }
+            });
+            mFilledStarImgView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    mSharedPreferences.edit().putInt(DEFAULT_COLD_BREW_KEY, mBrew.getId()).apply();
+                    mColdBrewAdapter.notifyDataSetChanged();
+                    // TODO: 2/12/2018 Implement more efficient way to update data set
+
+                    mFilledStarImgView.setVisibility(View.GONE);
+                    mStarBorderImgView.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         @Override
@@ -382,6 +445,12 @@ public class MyBrewsFragment extends Fragment
             mRatioTextView.setText(getString(R.string.ratio, mBrew.getRatio()));
             mCoffeeWeightTextView.setText(String.valueOf(mBrew.getCoffeeWeight()));
             mWaterWeightTextView.setText(String.valueOf(mBrew.getWaterWeight()));
+
+            if (mBrew.getId() == mDefaultColdBrewId)
+            {
+                mStarBorderImgView.setVisibility(View.GONE);
+                mFilledStarImgView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

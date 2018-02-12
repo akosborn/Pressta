@@ -22,6 +22,7 @@ public class PresstaFragment extends Fragment
 {
     private static final String DEFAULT_HOT_BREW_KEY = "default_hot_brew";
     private static final String DEFAULT_COLD_BREW_KEY = "default_cold_brew";
+    private static final String PREFERENCES_FILE_KEY = "app_preferences";
     private RelativeLayout mQuickBrewRelativeLayout;
     private RelativeLayout mMyBrewsRelativeLayout;
     private TextView mQuickColdBrewTextView;
@@ -42,7 +43,7 @@ public class PresstaFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         if (!mSharedPreferences.contains(DEFAULT_HOT_BREW_KEY))
         {
