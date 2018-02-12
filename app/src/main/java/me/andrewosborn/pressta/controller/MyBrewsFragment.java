@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import me.andrewosborn.pressta.PresstaApplication;
 import me.andrewosborn.pressta.R;
 import me.andrewosborn.pressta.model.Brew;
+import me.andrewosborn.pressta.model.Type;
 import me.andrewosborn.pressta.viewmodel.BrewListViewModel;
 
 public class MyBrewsFragment extends Fragment
@@ -39,7 +40,8 @@ public class MyBrewsFragment extends Fragment
     private RecyclerView mColdBrewRecyclerView;
     private ColdBrewAdapter mColdBrewAdapter;
 
-    private List<Brew> mBrews;
+    private List<Brew> mHotBrews;
+    private List<Brew> mColdBrews;
 
     public static MyBrewsFragment newInstance()
     {
@@ -63,17 +65,32 @@ public class MyBrewsFragment extends Fragment
 
         mBrewListViewModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(BrewListViewModel.class);
-        mBrewListViewModel.getBrews().observe(this, new Observer<List<Brew>>()
+        mBrewListViewModel.getBrewsByType(Type.HOT).observe(this, new Observer<List<Brew>>()
         {
             @Override
             public void onChanged(@Nullable List<Brew> brews)
             {
-                if (mBrews == null)
+                if (mHotBrews == null)
                 {
-                    Log.i(TAG, "mBrewViewModel onChanged() called");
-                    mBrews = brews;
-                    if (!mBrews.isEmpty())
-                        setupUI();
+                    Log.i(TAG, "mBrewListViewModel onChanged() called");
+                    mHotBrews = brews;
+                    if (mHotBrews != null)
+                        setupHotBrewAdapter();
+                }
+            }
+        });
+
+        mBrewListViewModel.getBrewsByType(Type.COLD).observe(this, new Observer<List<Brew>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<Brew> brews)
+            {
+                if (mColdBrews == null)
+                {
+                    Log.i(TAG, "mBrewListViewModel onChanged() called");
+                    mColdBrews = brews;
+                    if (mColdBrews != null)
+                        setupColdBrewAdapter();
                 }
             }
         });
@@ -97,26 +114,29 @@ public class MyBrewsFragment extends Fragment
         return view;
     }
 
-    private void setupUI()
+    private void setupHotBrewAdapter()
     {
         if (mHotBrewAdapter == null)
         {
-            mHotBrewAdapter = new HotBrewAdapter(mBrews);
+            mHotBrewAdapter = new HotBrewAdapter(mHotBrews);
             mHotBrewRecyclerView.setAdapter(mHotBrewAdapter);
         } else
         {
-            mHotBrewAdapter.setBrews(mBrews);
+            mHotBrewAdapter.setBrews(mHotBrews);
             mHotBrewAdapter.notifyDataSetChanged();
         }
+    }
 
+    private void setupColdBrewAdapter()
+    {
         if (mColdBrewAdapter == null)
         {
-            mColdBrewAdapter = new ColdBrewAdapter(mBrews);
+            mColdBrewAdapter = new ColdBrewAdapter(mColdBrews);
             mColdBrewRecyclerView.setAdapter(mColdBrewAdapter);
         }
         else
         {
-            mColdBrewAdapter.setBrews(mBrews);
+            mColdBrewAdapter.setBrews(mColdBrews);
             mColdBrewAdapter.notifyDataSetChanged();
         }
     }
@@ -192,12 +212,12 @@ public class MyBrewsFragment extends Fragment
         @Override
         public int getItemCount()
         {
-            return mBrews.size();
+            return mColdBrews.size();
         }
 
         void setBrews(List<Brew> brews)
         {
-            mBrews = brews;
+            mHotBrews = brews;
         }
     }
 

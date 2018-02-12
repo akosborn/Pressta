@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.andrewosborn.pressta.model.Brew;
+import me.andrewosborn.pressta.model.Type;
 
 public class BrewRepository
 {
@@ -21,6 +22,11 @@ public class BrewRepository
     public LiveData<List<Brew>> getAll()
     {
         return brewDao.findAll();
+    }
+
+    public LiveData<List<Brew>> getByType(Type type)
+    {
+        return brewDao.findByType(type);
     }
 
     public LiveData<Brew> getById(int id)

@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import me.andrewosborn.pressta.model.Brew;
+import me.andrewosborn.pressta.model.Type;
 import me.andrewosborn.pressta.persistence.BrewRepository;
 
 public class BrewListViewModel extends ViewModel
@@ -21,6 +22,11 @@ public class BrewListViewModel extends ViewModel
     public LiveData<List<Brew>> getBrews()
     {
         return brewRepository.getAll();
+    }
+
+    public LiveData<List<Brew>> getBrewsByType(Type type)
+    {
+        return brewRepository.getByType(type);
     }
 
     public void deleteBrew(Brew brew)

@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -14,6 +15,7 @@ import me.andrewosborn.pressta.model.Brew;
 
 
 @Database(entities = {Brew.class}, version = 1, exportSchema = false)
+@TypeConverters({BrewTypeConverter.class, DateConverter.class})
 public abstract class PresstaDatabase extends RoomDatabase
 {
     private static final String TAG = "PresstaDatabase";
