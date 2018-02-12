@@ -27,7 +27,8 @@
         app:layout_constraintTop_toBottomOf="@id/text_view_hot_brew_label"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="10dp">
     </android.support.v7.widget.RecyclerView>
 
     <android.support.constraint.Guideline
@@ -37,7 +38,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="0.5"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/text_view_cold_brew_label"
@@ -49,7 +52,8 @@
         app:layout_constraintBottom_toTopOf="@id/cold_brew_recycler_view"
         android:text="@string/cold_label"
         tools:text="COLD"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cold_brew_recycler_view"
