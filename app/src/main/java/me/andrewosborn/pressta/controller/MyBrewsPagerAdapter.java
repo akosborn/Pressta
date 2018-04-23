@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class MyBrewsPagerAdapter extends FragmentStatePagerAdapter
 {
     private final int TAB_COUNT = 2;
+    private final int HOT_TAB = 0;
 
     MyBrewsPagerAdapter(FragmentManager fm)
     {
@@ -17,7 +18,10 @@ public class MyBrewsPagerAdapter extends FragmentStatePagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        return MyBrewsFragment.newInstance();
+        if (position == HOT_TAB)
+            return MyHotBrewsFragment.newInstance();
+        else
+            return MyColdBrewsFragment.newInstance();
     }
 
     @Override
